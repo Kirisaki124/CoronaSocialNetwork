@@ -15,4 +15,8 @@ class MainActivity : AppCompatActivity() {
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
         mAuth = FirebaseAuth.getInstance()
     }
+
+    fun hello() {
+        println("hello world")
+    }
 }
