@@ -1,6 +1,5 @@
 package hava.coronasocialnetwork.database
 
-import android.content.Context
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
@@ -9,12 +8,7 @@ import hava.coronasocialnetwork.model.User
 object Dao {
     var mAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private var database: FirebaseDatabase = FirebaseDatabase.getInstance()
-    private lateinit var context: Context
     var ref = database.reference
-
-    fun setContext(context: Context) {
-        this.context = context
-    }
 
     fun register(
         email: String,
@@ -45,7 +39,7 @@ object Dao {
                     val user = mAuth.currentUser
 //                    Log.i("Testing", user?.uid)
                 } else {
-                    Log.i("Testing", task.exception.toString())
+                    Log.i("Error", task.exception.toString())
                 }
             }
         return mAuth.currentUser?.uid
