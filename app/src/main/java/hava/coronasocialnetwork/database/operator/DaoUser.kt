@@ -29,4 +29,17 @@ object DaoUser {
             }
         return isSuccess
     }
+
+    fun changePhone(uid: String, phone: String): Boolean {
+        var isSuccess = false
+        DaoContext.ref.child("Users").child(uid).child("phone").setValue(phone)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    isSuccess = true
+                } else {
+                    Log.i("Error", task.exception.toString())
+                }
+            }
+        return isSuccess
+    }
 }

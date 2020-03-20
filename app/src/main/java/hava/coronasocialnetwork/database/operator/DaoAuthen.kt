@@ -1,6 +1,7 @@
 package hava.coronasocialnetwork.database.operator
 
 import android.util.Log
+import com.google.firebase.auth.FirebaseUser
 import hava.coronasocialnetwork.database.context.DaoContext
 import hava.coronasocialnetwork.model.User
 
@@ -13,10 +14,10 @@ object DaoAuthen {
         address: String
     ): Boolean {
         var isSuccess = false
-        DaoContext.mAuth.createUserWithEmailAndPassword(email, password)
+        DaoContext.authen.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    val user = DaoContext.mAuth.currentUser
+                    val user = DaoContext.authen.currentUser
                     isSuccess = true
                     if (user != null) {
                         DaoContext.ref.child("Users").push()
@@ -30,16 +31,24 @@ object DaoAuthen {
     }
 
     fun login(email: String, password: String): String? {
-        DaoContext.mAuth.signInWithEmailAndPassword(email, password)
+        DaoContext.authen.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    val user = DaoContext.mAuth.currentUser
+                    val user = DaoContext.authen.currentUser
 //                    Log.i("Testing", user?.uid)
                 } else {
                     Log.i("Error", task.exception.toString())
                 }
             }
-        return DaoContext.mAuth.currentUser?.uid
+        return DaoContext.authen.currentUser?.uid
+    }
+
+    fun signout() {
+        DaoContext.authen.signOut()
+    }
+
+    fun getCurrentUser(): FirebaseUser? {
+        return DaoContext.authen.currentUser
     }
 
 }
