@@ -10,10 +10,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         Dao.setContext(this)
-//        DaoManagement().register("tu1ngd123sdfsdfqwedshsdw4130134@fpt.edu.vn", "123@123a", "0123123", "tung", "wuhan")
-        var userId: String? =
-            DaoManagement().login("tu1ngd123sdfsdfqwedshsdw4130134@fpt.edu.vn", "123@123a")
-
+        DaoManagement.register("KhanhChanCute@fpt.edu.vn", "123@123a", "0123123", "tung", "wuhan")
+//        var userId: String? =
+//            DaoManagement.login("KhanhChanCute@fpt.edu.vn", "123@123a")
+//        Log.i("UserId", userId)
     }
 
 }

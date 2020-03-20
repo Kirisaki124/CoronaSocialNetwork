@@ -7,22 +7,13 @@ import com.google.firebase.database.FirebaseDatabase
 import hava.coronasocialnetwork.model.User
 
 object Dao {
-    //    private var mFirebaseAnalytics: FirebaseAnalytics
-    private var mAuth: FirebaseAuth = FirebaseAuth.getInstance()
+    var mAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private var database: FirebaseDatabase = FirebaseDatabase.getInstance()
     private lateinit var context: Context
-    private var ref = database.reference
+    var ref = database.reference
 
     fun setContext(context: Context) {
         this.context = context
-    }
-
-    fun getDatabase(): FirebaseDatabase {
-        return this.database
-    }
-
-    fun getmAuth(): FirebaseAuth {
-        return this.mAuth
     }
 
     fun register(
@@ -32,7 +23,7 @@ object Dao {
         username: String,
         address: String
     ): Boolean {
-        var isSuccess: Boolean = false
+        var isSuccess = false
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 val user = mAuth.currentUser
