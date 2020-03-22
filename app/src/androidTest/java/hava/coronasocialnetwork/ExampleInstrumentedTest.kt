@@ -1,4 +1,4 @@
-package com.example.coronasocialnetwork
+package hava.coronasocialnetwork
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

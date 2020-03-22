@@ -1,4 +1,4 @@
-package com.example.coronasocialnetwork
+package hava.coronasocialnetwork
 
 import org.junit.Test
 
