@@ -40,7 +40,6 @@
 
         <com.google.android.material.textfield.TextInputLayout
             style="@style/TextInputLayoutStyle"
-            android:layout_marginTop="8dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/password_hint"
@@ -58,18 +57,24 @@
 
         <Button
             android:id="@+id/containedButton"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="16dp"
-            android:paddingLeft="16dp"
-            android:paddingTop="8dp"
-            android:paddingRight="16dp"
+            android:padding="8dp"
             android:text="@string/sign_in"
             android:textAllCaps="false"
             android:textColor="@color/colorPrimaryDark"
-            android:paddingBottom="8dp"
             android:textSize="18sp"
             app:backgroundTint="@color/colorAccent" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/signUpTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:text="Don't have an account? Sign Up now!"
+        android:textColor="@color/colorAccent"
+        android:textSize="18sp" />
 </LinearLayout>

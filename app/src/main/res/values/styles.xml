@@ -8,11 +8,12 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="TextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+    <style name="TextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.Dense">
         <item name="hintTextColor">@color/colorAccent</item>
         <item name="boxStrokeColor">@color/colorAccent</item>
-        <item name="android:textColorHint">@android:color/white</item>
-        <item name="startIconTint">@android:color/white</item>
+        <item name="android:textColorHint">@color/colorPrimary</item>
+        <item name="startIconTint">@color/colorPrimary</item>
+        <item name="boxBackgroundColor">@android:color/white</item>
     </style>
 
     <style name="TextInputEditTextStyle" parent="">
