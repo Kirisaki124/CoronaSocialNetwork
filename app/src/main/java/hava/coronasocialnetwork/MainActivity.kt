@@ -26,6 +26,4 @@ class MainActivity : AppCompatActivity() {
             Log.i("uid", DaoAuthenManagement.getCurrentUser()?.uid)
         }
     }
-
-
 }
