@@ -2,21 +2,18 @@ package hava.coronasocialnetwork
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.auth.FirebaseAuth
-
+import hava.coronasocialnetwork.database.Dao
+import hava.coronasocialnetwork.database.DaoManagement
 
 class MainActivity : AppCompatActivity() {
-    private var mFirebaseAnalytics: FirebaseAnalytics? = null
-    private var mAuth: FirebaseAuth? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
-        mAuth = FirebaseAuth.getInstance()
+        Dao.setContext(this)
+//        DaoManagement().register("tu1ngd123sdfsdfqwedshsdw4130134@fpt.edu.vn", "123@123a", "0123123", "tung", "wuhan")
+        var userId: String? =
+            DaoManagement().login("tu1ngd123sdfsdfqwedshsdw4130134@fpt.edu.vn", "123@123a")
+
     }
 
-    fun hello() {
-        println("hello world")
-    }
 }
