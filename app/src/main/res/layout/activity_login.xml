@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:text="Sign In"
+        android:text="@string/sign_in"
         android:textColor="@color/colorAccent"
         android:textSize="32sp"
         android:textStyle="bold" />
@@ -21,6 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="32dp"
         android:layout_marginRight="32dp"
+        android:layout_marginTop="16dp"
         android:orientation="vertical">
 
         <com.google.android.material.textfield.TextInputLayout
@@ -64,7 +65,7 @@
             android:padding="8dp"
             android:text="@string/sign_in"
             android:textAllCaps="false"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="@color/colorPrimary"
             android:textSize="18sp"
             app:backgroundTint="@color/colorAccent" />
     </LinearLayout>
@@ -74,7 +75,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="64dp"
-        android:text="Don't have an account? Sign Up now!"
+        android:text="@string/sign_up_now"
         android:textColor="@color/colorAccent"
         android:textSize="18sp" />
 </LinearLayout>
