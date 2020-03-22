@@ -1,8 +1,10 @@
 package hava.coronasocialnetwork.model
 
-data class User(
-    val username: String = "null",
-    val email: String = "null",
-    val phone: String = "null",
-    val address: String = "null"
+data class User constructor(
+    val username: String,
+    val email: String,
+    val phone: String,
+    val address: String
 )
+
+

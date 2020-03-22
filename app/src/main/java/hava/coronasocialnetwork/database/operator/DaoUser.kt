@@ -6,6 +6,9 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import hava.coronasocialnetwork.database.context.DaoContext
 import hava.coronasocialnetwork.model.User
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 
 object DaoUser {
@@ -48,25 +51,20 @@ object DaoUser {
         return isSuccess
     }
 
-    fun getUserInfo(uid: String?): User? {
+    suspend fun getUserInfo(uid: String?): User? {
         val ref = DaoContext.ref.child("Users").child(uid!!)
-        var user = User()
-        var ok = false
 
-        ref.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-                Log.i("Error", p0.message)
-                ok = true
-            }
+        return suspendCoroutine { cont ->
+            ref.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(databaseError: DatabaseError) {
+                    cont.resumeWithException(databaseError.toException())
+                }
 
-            override fun onDataChange(p0: DataSnapshot) {
-                user = p0.getValue(User::class.java)!!
-                ok = true
-                Log.i("Username", user.username)
-            }
-        })
-        while (!ok) {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val user = dataSnapshot.getValue(User::class.java)
+                    cont.resume(user)
+                }
+            })
         }
-        return user
     }
 }

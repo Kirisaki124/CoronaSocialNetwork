@@ -22,7 +22,7 @@ object DaoUserManagement {
         return DaoUser.changePhone(uid, phone)
     }
 
-    fun getUserInfo(uid: String?): User? {
+    suspend fun getUserInfo(uid: String?): User? {
         return DaoUser.getUserInfo(uid)
     }
 }
