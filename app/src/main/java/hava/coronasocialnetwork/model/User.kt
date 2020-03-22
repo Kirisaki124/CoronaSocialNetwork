@@ -1,10 +1,10 @@
 package hava.coronasocialnetwork.model
 
-import java.io.Serializable
+data class User constructor(
+    val username: String,
+    val email: String,
+    val phone: String,
+    val address: String
+)
 
-class User(
-    var username: String?,
-    var email: String?,
-    var phone: String?,
-    var address: String?
-) : Serializable
+
