@@ -1,6 +1,7 @@
 package hava.coronasocialnetwork.database.management
 
 import hava.coronasocialnetwork.database.operator.DaoUser
+import hava.coronasocialnetwork.model.User
 
 object DaoUserManagement {
     // Change user's username using user id
@@ -19,5 +20,9 @@ object DaoUserManagement {
     // return true if success
     fun changePhone(uid: String, phone: String): Boolean {
         return DaoUser.changePhone(uid, phone)
+    }
+
+    fun getUserInfo(uid: String?): User? {
+        return DaoUser.getUserInfo(uid)
     }
 }

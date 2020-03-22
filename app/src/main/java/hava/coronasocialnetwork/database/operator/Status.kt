@@ -1,5 +1,5 @@
 package hava.coronasocialnetwork.database.operator
 
 enum class Status {
-    LOGIN, REGISTER
+    EMAIL_ALREADY_EXISTED, NO_ACCOUNT_FOUND, INVALID_PASSWORD, OK
 }

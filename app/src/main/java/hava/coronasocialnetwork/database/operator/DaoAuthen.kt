@@ -1,53 +1,44 @@
 package hava.coronasocialnetwork.database.operator
 
-import android.util.Log
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseUser
 import hava.coronasocialnetwork.database.context.DaoContext
 import hava.coronasocialnetwork.model.User
-
-interface OnAuthen {
-    fun onSuccess(status: Status)
-    fun onFailed(message: String?)
-}
+import kotlinx.coroutines.tasks.await
 
 object DaoAuthen {
-    fun register(
-        callee: OnAuthen,
+    suspend fun register(
         email: String,
         password: String,
         phone: String,
         username: String,
         address: String
-    ) {
-        DaoContext.authen.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val user = DaoContext.authen.currentUser
-                    Log.i("Register", "Done")
-                    if (user != null) {
-                        DaoContext.ref.child("Users").push()
-                            .setValue(User(username, email, phone, address))
-                    }
-                    callee.onSuccess(Status.REGISTER)
-                } else {
-                    callee.onFailed(task.exception?.message)
+    ): Status {
+        try {
+            DaoContext.authen.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+                    DaoContext.ref.child("Users").child(task.result?.user?.uid.toString())
+                        .setValue(User(username, email, phone, address))
                 }
-            }
+                .await()
+
+        } catch (e: FirebaseAuthUserCollisionException) {
+            return Status.EMAIL_ALREADY_EXISTED
+        }
+        return Status.OK
     }
 
-    fun login(callee: OnAuthen, email: String, password: String): String? {
-        DaoContext.authen.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val user = DaoContext.authen.currentUser
-//                    Log.i("Testing", user?.uid)
-                    callee.onSuccess(Status.LOGIN)
-                } else {
-//                    Log.i("Error", task.exception.toString())
-                    callee.onFailed(task.exception.toString())
-                }
-            }
-        return DaoContext.authen.currentUser?.uid
+    suspend fun login(email: String, password: String): Status {
+        try {
+            DaoContext.authen.signInWithEmailAndPassword(email, password).await()
+        } catch (e: FirebaseAuthInvalidUserException) {
+            return Status.NO_ACCOUNT_FOUND
+        } catch (e: FirebaseAuthInvalidCredentialsException) {
+            return Status.INVALID_PASSWORD
+        }
+        return Status.OK
     }
 
     fun signout() {
