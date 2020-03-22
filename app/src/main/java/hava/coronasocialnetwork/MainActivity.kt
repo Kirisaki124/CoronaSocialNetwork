@@ -41,6 +41,4 @@ class MainActivity : AppCompatActivity() {
         DaoPostManagement.addPost("hzRnaNIxqnbc6gSENvyWAZQXi472", post)
 
     }
-
-
 }
