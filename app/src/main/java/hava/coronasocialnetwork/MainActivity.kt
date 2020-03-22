@@ -1,23 +1,29 @@
 package hava.coronasocialnetwork
 
-import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.auth.FirebaseAuth
-import hava.coronasocialnetwork.activities.RegisterActivity
-
+import hava.coronasocialnetwork.database.management.DaoAuthenManagement
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 
 class MainActivity : AppCompatActivity() {
-    private var mFirebaseAnalytics: FirebaseAnalytics? = null
-    private var mAuth: FirebaseAuth? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
-        mAuth = FirebaseAuth.getInstance()
 
-        startActivity(Intent(this, RegisterActivity::class.java))
+        GlobalScope.async(Dispatchers.IO) {
+            //            DaoAuthenManagement.register(
+//                "KhanhChan@fpt.edu.vn",
+//                "123@123a",
+//                "0123123",
+//                "Princess of Thanh Hoa",
+//                "Tieu vuong quoc"
+//            )
+
+            DaoAuthenManagement.login("KhanhChan@fpt.edu.vn", "123@123a")
+            Log.i("uid", DaoAuthenManagement.getCurrentUser()?.uid)
+        }
     }
-
 }
