@@ -19,7 +19,6 @@ object DaoAuthen {
                         .setValue(User(username, email, phone))
                 }
                 .await()
-
         } catch (e: FirebaseAuthUserCollisionException) {
             return RegisterStatus.EMAIL_ALREADY_EXISTED
         } catch (e: FirebaseAuthWeakPasswordException) {
