@@ -1,9 +1,6 @@
 package hava.coronasocialnetwork.database.operator
 
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
-import com.google.firebase.auth.FirebaseAuthInvalidUserException
-import com.google.firebase.auth.FirebaseAuthUserCollisionException
-import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.*
 import hava.coronasocialnetwork.database.context.DaoContext
 import hava.coronasocialnetwork.model.User
 import kotlinx.coroutines.tasks.await
@@ -15,7 +12,7 @@ object DaoAuthen {
         phone: String,
         username: String,
         address: String
-    ): Status {
+    ): RegisterStatus {
         try {
             DaoContext.authen.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
@@ -23,22 +20,25 @@ object DaoAuthen {
                         .setValue(User(username, email, phone, address))
                 }
                 .await()
-
         } catch (e: FirebaseAuthUserCollisionException) {
-            return Status.EMAIL_ALREADY_EXISTED
+            return RegisterStatus.EMAIL_ALREADY_EXISTED
+        } catch (e: FirebaseAuthWeakPasswordException) {
+            return RegisterStatus.WEAK_PASSWORD
+        } catch (e: FirebaseAuthEmailException) {
+            return RegisterStatus.WRONG_EMAIL_FORMAT
         }
-        return Status.OK
+        return RegisterStatus.OK
     }
 
-    suspend fun login(email: String, password: String): Status {
+    suspend fun login(email: String, password: String): LoginStatus {
         try {
             DaoContext.authen.signInWithEmailAndPassword(email, password).await()
         } catch (e: FirebaseAuthInvalidUserException) {
-            return Status.NO_ACCOUNT_FOUND
+            return LoginStatus.NO_ACCOUNT_FOUND
         } catch (e: FirebaseAuthInvalidCredentialsException) {
-            return Status.INVALID_PASSWORD
+            return LoginStatus.INVALID_PASSWORD
         }
-        return Status.OK
+        return LoginStatus.OK
     }
 
     fun signout() {
