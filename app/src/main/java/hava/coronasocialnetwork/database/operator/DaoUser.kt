@@ -67,4 +67,26 @@ object DaoUser {
             })
         }
     }
+
+    suspend fun searchUserByName(): ArrayList<String> {
+        val ref = DaoContext.ref.child("Users")
+        return suspendCoroutine { cont ->
+            ref.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
+                    Log.i("Error", p0.toException().toString())
+                    cont.resumeWithException(p0.toException())
+                }
+
+                override fun onDataChange(p0: DataSnapshot) {
+                    val list = ArrayList<String>()
+                    for (record in p0.children) {
+                        list.add(record.key!!)
+                        Log.i("RECORD", record.key.toString())
+                    }
+                    Log.i("Here", list.size.toString())
+                    cont.resume(list)
+                }
+            })
+        }
+    }
 }
