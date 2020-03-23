@@ -2,7 +2,8 @@ package hava.coronasocialnetwork.database.management
 
 import com.google.firebase.auth.FirebaseUser
 import hava.coronasocialnetwork.database.operator.DaoAuthen
-import hava.coronasocialnetwork.database.operator.Status
+import hava.coronasocialnetwork.database.operator.StatusLogin
+import hava.coronasocialnetwork.database.operator.StatusRegister
 
 object DaoAuthenManagement {
     // Creating a new user using email, password, phone number, username and address
@@ -13,7 +14,7 @@ object DaoAuthenManagement {
         phone: String,
         username: String,
         address: String
-    ): Status {
+    ): StatusRegister {
         return DaoAuthen.register(
             email,
             password,
@@ -25,7 +26,7 @@ object DaoAuthenManagement {
 
     // Login using email and password
     // return true if success
-    suspend fun login(email: String, password: String): Status {
+    suspend fun login(email: String, password: String): StatusLogin {
         return DaoAuthen.login(email, password)
     }
 

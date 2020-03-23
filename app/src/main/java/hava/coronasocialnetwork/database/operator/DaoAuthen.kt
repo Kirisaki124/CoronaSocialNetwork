@@ -1,9 +1,6 @@
 package hava.coronasocialnetwork.database.operator
 
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
-import com.google.firebase.auth.FirebaseAuthInvalidUserException
-import com.google.firebase.auth.FirebaseAuthUserCollisionException
-import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.*
 import hava.coronasocialnetwork.database.context.DaoContext
 import hava.coronasocialnetwork.model.User
 import kotlinx.coroutines.tasks.await
@@ -15,30 +12,33 @@ object DaoAuthen {
         phone: String,
         username: String,
         address: String
-    ): Status {
+    ): StatusRegister {
         try {
             DaoContext.authen.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
                     DaoContext.ref.child("Users").child(task.result?.user?.uid.toString())
-                        .setValue(User(username, email, phone, address))
+                        .setValue(User(username, email, phone, address, ArrayList()))
                 }
                 .await()
-
         } catch (e: FirebaseAuthUserCollisionException) {
-            return Status.EMAIL_ALREADY_EXISTED
+            return StatusRegister.EMAIL_ALREADY_EXISTED
+        } catch (e: FirebaseAuthWeakPasswordException) {
+            return StatusRegister.WEAK_PASSWORD
+        } catch (e: FirebaseAuthEmailException) {
+            return StatusRegister.WRONG_EMAIL_FORMAT
         }
-        return Status.OK
+        return StatusRegister.OK
     }
 
-    suspend fun login(email: String, password: String): Status {
+    suspend fun login(email: String, password: String): StatusLogin {
         try {
             DaoContext.authen.signInWithEmailAndPassword(email, password).await()
         } catch (e: FirebaseAuthInvalidUserException) {
-            return Status.NO_ACCOUNT_FOUND
+            return StatusLogin.NO_ACCOUNT_FOUND
         } catch (e: FirebaseAuthInvalidCredentialsException) {
-            return Status.INVALID_PASSWORD
+            return StatusLogin.INVALID_PASSWORD
         }
-        return Status.OK
+        return StatusLogin.OK
     }
 
     fun signout() {
