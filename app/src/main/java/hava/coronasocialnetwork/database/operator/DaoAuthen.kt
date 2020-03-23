@@ -10,14 +10,13 @@ object DaoAuthen {
         email: String,
         password: String,
         phone: String,
-        username: String,
-        address: String
+        username: String
     ): RegisterStatus {
         try {
             DaoContext.authen.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
                     DaoContext.ref.child("Users").child(task.result?.user?.uid.toString())
-                        .setValue(User(username, email, phone, address))
+                        .setValue(User(username, email, phone))
                 }
                 .await()
         } catch (e: FirebaseAuthUserCollisionException) {

@@ -10,15 +10,13 @@ object DaoAuthenManagement {
         email: String,
         password: String,
         phone: String,
-        username: String,
-        address: String
+        username: String
     ): RegisterStatus {
         return DaoAuthen.register(
             email,
             password,
             phone,
-            username,
-            address
+            username
         )
     }
 
