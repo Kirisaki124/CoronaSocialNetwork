@@ -10,35 +10,34 @@ object DaoAuthen {
         email: String,
         password: String,
         phone: String,
-        username: String,
-        address: String
-    ): StatusRegister {
+        username: String
+    ): RegisterStatus {
         try {
             DaoContext.authen.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
                     DaoContext.ref.child("Users").child(task.result?.user?.uid.toString())
-                        .setValue(User(username, email, phone, address, ArrayList()))
+                        .setValue(User(username, email, phone, ArrayList()))
                 }
                 .await()
         } catch (e: FirebaseAuthUserCollisionException) {
-            return StatusRegister.EMAIL_ALREADY_EXISTED
+            return RegisterStatus.EMAIL_ALREADY_EXISTED
         } catch (e: FirebaseAuthWeakPasswordException) {
-            return StatusRegister.WEAK_PASSWORD
+            return RegisterStatus.WEAK_PASSWORD
         } catch (e: FirebaseAuthEmailException) {
-            return StatusRegister.WRONG_EMAIL_FORMAT
+            return RegisterStatus.WRONG_EMAIL_FORMAT
         }
-        return StatusRegister.OK
+        return RegisterStatus.OK
     }
 
-    suspend fun login(email: String, password: String): StatusLogin {
+    suspend fun login(email: String, password: String): LoginStatus {
         try {
             DaoContext.authen.signInWithEmailAndPassword(email, password).await()
         } catch (e: FirebaseAuthInvalidUserException) {
-            return StatusLogin.NO_ACCOUNT_FOUND
+            return LoginStatus.NO_ACCOUNT_FOUND
         } catch (e: FirebaseAuthInvalidCredentialsException) {
-            return StatusLogin.INVALID_PASSWORD
+            return LoginStatus.INVALID_PASSWORD
         }
-        return StatusLogin.OK
+        return LoginStatus.OK
     }
 
     fun signout() {
