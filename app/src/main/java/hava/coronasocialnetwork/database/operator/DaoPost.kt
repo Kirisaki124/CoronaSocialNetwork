@@ -5,6 +5,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import hava.coronasocialnetwork.database.context.DaoContext
+import hava.coronasocialnetwork.database.management.DaoUserManagement
 import hava.coronasocialnetwork.model.Post
 import java.io.File
 import java.io.FileInputStream
@@ -36,7 +37,7 @@ object DaoPost {
         return RegisterStatus.OK
     }
 
-    suspend fun getUserPostsById(uid: String): ArrayList<Post> {
+    suspend fun getUserPostsById(uid: String): List<Post> {
         return suspendCoroutine { cont ->
             DaoContext.ref.child("Users").child(uid).child("posts")
                 .addValueEventListener(object : ValueEventListener {
@@ -46,11 +47,9 @@ object DaoPost {
                     }
 
                     override fun onDataChange(p0: DataSnapshot) {
-                        val list: ArrayList<Post> = ArrayList()
-                        for (post in p0.children) {
-                            Log.i("Post", post.getValue(Post::class.java).toString())
-                            list.add(post.getValue(Post::class.java)!!)
-                        }
+                        val list =
+                            p0.children.map { dataSnapshot -> dataSnapshot.getValue(Post::class.java)!! }
+
                         cont.resume(list)
                     }
 
@@ -58,26 +57,11 @@ object DaoPost {
         }
     }
 
-    suspend fun getNewFeed(): ArrayList<Post> {
-        return suspendCoroutine { cont ->
-            DaoContext.ref.child("Users").child(DaoAuthen.getCurrentUser()?.uid!!).child("posts")
-                .addValueEventListener(object : ValueEventListener {
-                    override fun onCancelled(p0: DatabaseError) {
-                        Log.i("Error", p0.toString())
-                        cont.resumeWithException(p0.toException())
-                    }
-
-                    override fun onDataChange(p0: DataSnapshot) {
-                        val list: ArrayList<Post> = ArrayList()
-                        for (post in p0.children) {
-                            Log.i("Post", post.getValue(Post::class.java).toString())
-                            list.add(post.getValue(Post::class.java)!!)
-                        }
-                        cont.resume(list)
-                    }
-
-                })
-        }
+    suspend fun getNewFeed(): List<Post> {
+        val friendListUid =
+            DaoContext.authen.currentUser?.uid?.let { DaoUserManagement.getFriendList(it) }
+        return friendListUid?.map { friendUid -> getUserPostsById(friendUid) }?.flatten()
+            ?: listOf()
     }
 
 }

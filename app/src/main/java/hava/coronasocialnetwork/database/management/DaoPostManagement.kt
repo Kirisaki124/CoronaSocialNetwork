@@ -10,11 +10,11 @@ object DaoPostManagement {
         return RegisterStatus.OK
     }
 
-    suspend fun getUserPostsById(uid: String): ArrayList<Post> {
+    suspend fun getUserPostsById(uid: String): List<Post> {
         return DaoPost.getUserPostsById(uid)
     }
 
-    suspend fun getNewFeed(): ArrayList<Post> {
+    suspend fun getNewFeed(): List<Post> {
         return DaoPost.getNewFeed()
     }
 }
