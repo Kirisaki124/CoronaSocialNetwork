@@ -4,6 +4,7 @@ import android.net.Uri
 import android.util.Log
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.Query
 import com.google.firebase.database.ValueEventListener
 import hava.coronasocialnetwork.database.context.DaoContext
 import hava.coronasocialnetwork.database.management.DaoUserManagement
@@ -35,6 +36,10 @@ object DaoPost {
             .setValue(post.createdDate)
 
         return RegisterStatus.OK
+    }
+
+    fun getPostQuery(uid: String): Query {
+        return DaoContext.ref.child("Users").child(uid).child("posts")
     }
 
     suspend fun getUserPostsById(uid: String): List<Post> {
