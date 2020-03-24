@@ -1,5 +1,6 @@
 package hava.coronasocialnetwork.database.operator
 
+import android.net.Uri
 import android.util.Log
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -20,14 +21,16 @@ object DaoPost {
             val image = File(post.image)
             val stream = FileInputStream(image)
             val imageExtension = image.name.split(".")[1]
-
             DaoContext.ref.child("Users").child(currentUid).child("posts").child(key!!)
                 .child("image")
                 .setValue("$key.$imageExtension")
             DaoContext.storageRef.child("images/$key.$imageExtension").putStream(stream)
         }
+        DaoContext.ref.child("Users").child(currentUid).child("posts").child(key!!)
+            .child("ownerUid")
+            .setValue(post.ownerUid)
 
-        DaoContext.ref.child("Users").child(currentUid).child("posts").child(key!!).child("caption")
+        DaoContext.ref.child("Users").child(currentUid).child("posts").child(key).child("caption")
             .setValue(post.caption)
 
         DaoContext.ref.child("Users").child(currentUid).child("posts").child(key)
@@ -62,6 +65,20 @@ object DaoPost {
             DaoContext.authen.currentUser?.uid?.let { DaoUserManagement.getFriendList(it) }
         return friendListUid?.map { friendUid -> getUserPostsById(friendUid) }?.flatten()
             ?: listOf()
+    }
+
+    suspend fun getPostImage(postId: String): Uri {
+        return suspendCoroutine { cont ->
+            DaoContext.storageRef.child("images/${postId}.jpg").downloadUrl.addOnCompleteListener {
+                if (it.isSuccessful) {
+                    Log.i("URI", it.result.toString())
+                    cont.resume(it.result!!)
+                } else {
+                    Log.i("Error", it.exception.toString())
+                    cont.resumeWithException(it.exception!!)
+                }
+            }
+        }
     }
 
 }
