@@ -27,8 +27,7 @@ class RegisterActivity : AppCompatActivity() {
                             emailInput.text.toString(),
                             passwordInput.text.toString(),
                             phoneInput.text.toString(),
-                            nameInput.text.toString(),
-                            ""
+                            nameInput.text.toString()
                         )
 
                         when (result) {
