@@ -1,11 +1,16 @@
 package hava.coronasocialnetwork.database.operator
 
+import android.net.Uri
 import android.util.Log
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import hava.coronasocialnetwork.database.context.DaoContext
 import hava.coronasocialnetwork.model.User
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import java.io.File
+import java.io.FileInputStream
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
@@ -62,12 +67,15 @@ object DaoUser {
                 }
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    val user = User(
-                        dataSnapshot.child("username").value.toString(),
-                        dataSnapshot.child("email").value.toString(),
-                        dataSnapshot.child("phone").value.toString()
-                    )
-                    cont.resume(user)
+                    GlobalScope.launch {
+                        val user = User(
+                            dataSnapshot.child("username").value.toString(),
+                            dataSnapshot.child("email").value.toString(),
+                            dataSnapshot.child("phone").value.toString(),
+                            getAvatarById(uid)
+                        )
+                        cont.resume(user)
+                    }
                 }
             })
         }
@@ -118,8 +126,34 @@ object DaoUser {
                             p0.children.map { dataSnapshot -> dataSnapshot.getValue(String::class.java)!! }
                         cont.resume(friendList)
                     }
-
                 })
+        }
+    }
+
+    fun setAvatar(uid: String, imagePath: String): UpdateStatus {
+        if (imagePath.trim() != "") {
+            val image = File(imagePath)
+            val stream = FileInputStream(image)
+            val imageExtension = image.name.substringBeforeLast(".")
+            DaoContext.ref.child("Users").child(uid).child("avatar")
+                .setValue("$uid.$imageExtension")
+            DaoContext.storageRef.child("avatars/$uid.$imageExtension").putStream(stream)
+        }
+        return UpdateStatus.OK
+    }
+
+
+    suspend fun getAvatarById(uid: String): Uri {
+        return suspendCoroutine { cont ->
+            DaoContext.storageRef.child("avatars/${uid}.jpg").downloadUrl.addOnCompleteListener {
+                if (it.isSuccessful) {
+                    Log.i("URI", it.result.toString())
+                    cont.resume(it.result!!)
+                } else {
+                    Log.i("Error", it.exception.toString())
+                    cont.resumeWithException(it.exception!!)
+                }
+            }
         }
     }
 }

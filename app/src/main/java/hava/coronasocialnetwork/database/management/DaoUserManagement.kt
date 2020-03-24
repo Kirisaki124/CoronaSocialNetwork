@@ -1,6 +1,9 @@
 package hava.coronasocialnetwork.database.management
 
+import android.net.Uri
+import hava.coronasocialnetwork.database.context.DaoContext
 import hava.coronasocialnetwork.database.operator.DaoUser
+import hava.coronasocialnetwork.database.operator.UpdateStatus
 import hava.coronasocialnetwork.model.User
 
 object DaoUserManagement {
@@ -34,6 +37,14 @@ object DaoUserManagement {
 
     suspend fun getFriendList(uid: String): List<String> {
         return DaoUser.getFriendList(uid)
+    }
+
+    fun setAvatar(imagePath: String): UpdateStatus {
+        return DaoUser.setAvatar(DaoContext.authen.currentUser!!.uid, imagePath)
+    }
+
+    suspend fun getAvatarById(uid: String): Uri {
+        return DaoUser.getAvatarById(uid)
     }
 
 }

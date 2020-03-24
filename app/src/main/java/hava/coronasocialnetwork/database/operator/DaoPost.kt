@@ -8,8 +8,6 @@ import com.google.firebase.database.ValueEventListener
 import hava.coronasocialnetwork.database.context.DaoContext
 import hava.coronasocialnetwork.database.management.DaoUserManagement
 import hava.coronasocialnetwork.model.Post
-import java.io.File
-import java.io.FileInputStream
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
@@ -17,15 +15,14 @@ import kotlin.coroutines.suspendCoroutine
 object DaoPost {
     fun addPost(currentUid: String, post: Post): RegisterStatus {
         val key = DaoContext.ref.child("Users").child(currentUid).child("posts").push().key
-        if (post.image.trim() != "") {
-            val image = File(post.image)
-            val stream = FileInputStream(image)
-            val imageExtension = image.name.split(".")[1]
+        if (post.imageURI != Uri.EMPTY) {
+            val imageExtension = post.imageURI.path!!.substringAfterLast(".")
             DaoContext.ref.child("Users").child(currentUid).child("posts").child(key!!)
                 .child("image")
                 .setValue("$key.$imageExtension")
-            DaoContext.storageRef.child("images/$key.$imageExtension").putStream(stream)
+            DaoContext.storageRef.child("images/$key.$imageExtension").putFile(post.imageURI)
         }
+
         DaoContext.ref.child("Users").child(currentUid).child("posts").child(key!!)
             .child("ownerUid")
             .setValue(post.ownerUid)
