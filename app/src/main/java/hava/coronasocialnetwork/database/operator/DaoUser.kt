@@ -62,7 +62,11 @@ object DaoUser {
                 }
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    val user = dataSnapshot.getValue(User::class.java)
+                    val user = User(
+                        dataSnapshot.child("username").value.toString(),
+                        dataSnapshot.child("email").value.toString(),
+                        dataSnapshot.child("phone").value.toString()
+                    )
                     cont.resume(user)
                 }
             })
