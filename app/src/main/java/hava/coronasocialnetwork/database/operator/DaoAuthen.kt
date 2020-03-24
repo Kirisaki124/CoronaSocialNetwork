@@ -1,5 +1,6 @@
 package hava.coronasocialnetwork.database.operator
 
+import android.net.Uri
 import com.google.firebase.auth.*
 import hava.coronasocialnetwork.database.context.DaoContext
 import hava.coronasocialnetwork.model.User
@@ -16,7 +17,7 @@ object DaoAuthen {
             DaoContext.authen.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
                     DaoContext.ref.child("Users").child(task.result?.user?.uid.toString())
-                        .setValue(User(username, email, phone))
+                        .setValue(User(username, email, phone, Uri.EMPTY))
                 }
                 .await()
         } catch (e: FirebaseAuthUserCollisionException) {
