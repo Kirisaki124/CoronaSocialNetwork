@@ -1,12 +1,18 @@
 package hava.coronasocialnetwork.model
 
-import android.net.Uri
-
 class Post constructor(
     var caption: String,
     var ownerUid: String,
-    var imageURI: Uri,
     var createdDate: String
 ) {
-    constructor() : this("", "", Uri.EMPTY, "")
+    var id: String = ""
+
+    constructor() : this("", "", "")
+    constructor(caption: String, ownerUid: String, createdDate: String, id: String) : this(
+        caption,
+        ownerUid,
+        createdDate
+    ) {
+        this.id = id
+    }
 }

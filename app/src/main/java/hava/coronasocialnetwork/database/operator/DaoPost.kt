@@ -1,90 +1,52 @@
 package hava.coronasocialnetwork.database.operator
 
 import android.net.Uri
-import android.util.Log
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.Query
-import com.google.firebase.database.ValueEventListener
 import hava.coronasocialnetwork.database.context.DaoContext
-import hava.coronasocialnetwork.database.management.DaoUserManagement
 import hava.coronasocialnetwork.model.Post
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 object DaoPost {
-    fun addPost(currentUid: String, post: Post): RegisterStatus {
-        val key = DaoContext.ref.child("Users").child(currentUid).child("posts").push().key
-        if (post.imageURI != Uri.EMPTY) {
-            val imageExtension = post.imageURI.path!!.substringAfterLast(".")
-            DaoContext.ref.child("Users").child(currentUid).child("posts").child(key!!)
-                .child("image")
-                .setValue("$key.$imageExtension")
-            DaoContext.storageRef.child("images/$key.$imageExtension").putFile(post.imageURI)
-        } else {
-            DaoContext.ref.child("Users").child(currentUid).child("posts").child(key!!)
-                .child("image")
-                .setValue("")
+    suspend fun addPost(currentUid: String, post: Post, imageUri: Uri): RegisterStatus {
+        val key = DaoContext.ref.child("Users").child(currentUid).child("posts").push().key!!
+        var addedImage = false
+        val friendList = arrayListOf<String>()
+        friendList.addAll(DaoUser.getFriendList(currentUid))
+        friendList.add(currentUid)
+
+        friendList.forEach { friend ->
+            if (imageUri != Uri.EMPTY && !addedImage) {
+                DaoContext.storageRef.child("images/$key").putFile(imageUri)
+                addedImage = true
+            }
+            DaoContext.ref.child("Users").child(friend).child("posts").child(key).apply {
+                child("ownerUid")
+                    .setValue(post.ownerUid)
+                child("caption")
+                    .setValue(post.caption)
+                child("createdDate")
+                    .setValue(post.createdDate)
+                child("id")
+                    .setValue(key)
+            }
         }
-
-        DaoContext.ref.child("Users").child(currentUid).child("posts").child(key!!)
-            .child("ownerUid")
-            .setValue(post.ownerUid)
-
-        DaoContext.ref.child("Users").child(currentUid).child("posts").child(key).child("caption")
-            .setValue(post.caption)
-
-        DaoContext.ref.child("Users").child(currentUid).child("posts").child(key)
-            .child("createdDate")
-            .setValue(post.createdDate)
-
         return RegisterStatus.OK
     }
 
-    suspend fun getUserPostsById(uid: String): List<Post> {
-        return suspendCoroutine { cont ->
-            DaoContext.ref.child("Users").child(uid).child("posts")
-                .addValueEventListener(object : ValueEventListener {
-                    override fun onCancelled(p0: DatabaseError) {
-                        Log.i("Error", p0.toString())
-                        cont.resumeWithException(p0.toException())
-                    }
-
-                    override fun onDataChange(p0: DataSnapshot) {
-                        GlobalScope.launch {
-                            val list =
-                                p0.children.map { dataSnapshot ->
-                                    Post(
-                                        dataSnapshot.child("caption").value.toString(),
-                                        dataSnapshot.child("ownerUid").value.toString(),
-                                        if (dataSnapshot.child("image").value.toString().trim() != "") getPostImage(
-                                            dataSnapshot.key!!
-                                        ) else Uri.EMPTY,
-                                        dataSnapshot.child("createdDate").value.toString()
-                                    )
-                                }
-                            cont.resume(list)
-                        }
-
-                    }
-
-                })
-        }
+    fun getUserPostsById(uid: String): Query {
+        return DaoContext.ref.child("Users").child(uid).child("posts").orderByChild("ownerUid")
+            .equalTo(uid)
     }
 
-    suspend fun getNewFeed(): List<Post> {
-        val friendListUid =
-            DaoContext.authen.currentUser?.uid?.let { DaoUserManagement.getFriendList(it) }
-        return friendListUid?.map { friendUid -> getUserPostsById(friendUid) }?.flatten()
-            ?: listOf()
+    fun getNewFeed(): Query {
+        return DaoContext.ref.child("Users").child(DaoContext.authen.currentUser!!.uid)
+            .child("posts")
     }
 
     suspend fun getPostImage(postId: String): Uri {
         return suspendCoroutine { cont ->
-            DaoContext.storageRef.child("images/${postId}.jpg").downloadUrl.addOnCompleteListener {
+            DaoContext.storageRef.child("images/${postId}").downloadUrl.addOnCompleteListener {
                 if (it.isSuccessful) {
                     cont.resume(it.result!!)
                 } else {
@@ -93,5 +55,4 @@ object DaoPost {
             }
         }
     }
-
 }
