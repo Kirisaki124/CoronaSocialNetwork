@@ -64,7 +64,10 @@ object DaoPost {
                                     Post(
                                         dataSnapshot.child("caption").value.toString(),
                                         dataSnapshot.child("ownerUid").value.toString(),
-                                        getPostImage(dataSnapshot.key!!),
+                                        if (dataSnapshot.child("image").value.toString().trim() != "") getPostImage(
+                                            dataSnapshot.key!!
+                                        ) else Uri.EMPTY,
+
                                         dataSnapshot.child("createdDate").value.toString()
                                     )
                                 }
@@ -86,11 +89,9 @@ object DaoPost {
         return suspendCoroutine { cont ->
             DaoContext.storageRef.child("images/${postId}.jpg").downloadUrl.addOnCompleteListener {
                 if (it.isSuccessful) {
-                    Log.i("URI", it.result.toString())
                     cont.resume(it.result!!)
                 } else {
-                    Log.i("Error", it.exception.toString())
-                    cont.resumeWithException(it.exception!!)
+                    cont.resume(Uri.EMPTY)
                 }
             }
         }
