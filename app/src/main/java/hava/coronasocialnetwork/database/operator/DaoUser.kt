@@ -125,6 +125,7 @@ object DaoUser {
     fun setAvatar(uid: String, imageUri: Uri): UpdateStatus {
         DaoContext.storageRef.child("avatars/$uid").putFile(imageUri)
         DaoContext.ref.child("Users").child(uid).child("id").setValue(uid)
+
         return UpdateStatus.OK
     }
 
