@@ -18,19 +18,19 @@ import kotlin.coroutines.suspendCoroutine
 object DaoPost {
     fun addPost(currentUid: String, post: Post): RegisterStatus {
         val key = DaoContext.ref.child("Users").child(currentUid).child("posts").push().key
-        if (post.imageURI != Uri.EMPTY) {
-            val imageExtension = post.imageURI.path!!.substringAfterLast(".")
+        if (post.imageUri != Uri.EMPTY) {
+            val imageExtension = post.imageUri.path!!.substringAfterLast(".")
             DaoContext.ref.child("Users").child(currentUid).child("posts").child(key!!)
                 .child("image")
                 .setValue("$key.$imageExtension")
-            DaoContext.storageRef.child("images/$key.$imageExtension").putFile(post.imageURI)
+            DaoContext.storageRef.child("images/$key.$imageExtension").putFile(post.imageUri)
         } else {
             DaoContext.ref.child("Users").child(currentUid).child("posts").child(key!!)
                 .child("image")
                 .setValue("")
         }
 
-        DaoContext.ref.child("Users").child(currentUid).child("posts").child(key!!)
+        DaoContext.ref.child("Users").child(currentUid).child("posts").child(key)
             .child("ownerUid")
             .setValue(post.ownerUid)
 
@@ -63,14 +63,13 @@ object DaoPost {
                                         if (dataSnapshot.child("image").value.toString().trim() != "") getPostImage(
                                             dataSnapshot.key!!
                                         ) else Uri.EMPTY,
+
                                         dataSnapshot.child("createdDate").value.toString()
                                     )
                                 }
                             cont.resume(list)
                         }
-
                     }
-
                 })
         }
     }
