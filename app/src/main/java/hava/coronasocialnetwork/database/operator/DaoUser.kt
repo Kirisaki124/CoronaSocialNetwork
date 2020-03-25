@@ -72,7 +72,9 @@ object DaoUser {
                             dataSnapshot.child("username").value.toString(),
                             dataSnapshot.child("email").value.toString(),
                             dataSnapshot.child("phone").value.toString(),
-                            getAvatarById(uid)
+                            if (dataSnapshot.child("avatar").value.toString().trim() != "") getAvatarById(
+                                uid
+                            ) else Uri.EMPTY
                         )
                         cont.resume(user)
                     }

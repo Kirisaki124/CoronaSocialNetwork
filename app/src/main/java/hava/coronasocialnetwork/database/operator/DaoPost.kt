@@ -4,10 +4,13 @@ import android.net.Uri
 import android.util.Log
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.Query
 import com.google.firebase.database.ValueEventListener
 import hava.coronasocialnetwork.database.context.DaoContext
 import hava.coronasocialnetwork.database.management.DaoUserManagement
 import hava.coronasocialnetwork.model.Post
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
@@ -21,6 +24,10 @@ object DaoPost {
                 .child("image")
                 .setValue("$key.$imageExtension")
             DaoContext.storageRef.child("images/$key.$imageExtension").putFile(post.imageURI)
+        } else {
+            DaoContext.ref.child("Users").child(currentUid).child("posts").child(key!!)
+                .child("image")
+                .setValue("")
         }
 
         DaoContext.ref.child("Users").child(currentUid).child("posts").child(key!!)
@@ -47,10 +54,21 @@ object DaoPost {
                     }
 
                     override fun onDataChange(p0: DataSnapshot) {
-                        val list =
-                            p0.children.map { dataSnapshot -> dataSnapshot.getValue(Post::class.java)!! }
+                        GlobalScope.launch {
+                            val list =
+                                p0.children.map { dataSnapshot ->
+                                    Post(
+                                        dataSnapshot.child("caption").value.toString(),
+                                        dataSnapshot.child("ownerUid").value.toString(),
+                                        if (dataSnapshot.child("image").value.toString().trim() != "") getPostImage(
+                                            dataSnapshot.key!!
+                                        ) else Uri.EMPTY,
+                                        dataSnapshot.child("createdDate").value.toString()
+                                    )
+                                }
+                            cont.resume(list)
+                        }
 
-                        cont.resume(list)
                     }
 
                 })
@@ -68,11 +86,9 @@ object DaoPost {
         return suspendCoroutine { cont ->
             DaoContext.storageRef.child("images/${postId}.jpg").downloadUrl.addOnCompleteListener {
                 if (it.isSuccessful) {
-                    Log.i("URI", it.result.toString())
                     cont.resume(it.result!!)
                 } else {
-                    Log.i("Error", it.exception.toString())
-                    cont.resumeWithException(it.exception!!)
+                    cont.resume(Uri.EMPTY)
                 }
             }
         }
