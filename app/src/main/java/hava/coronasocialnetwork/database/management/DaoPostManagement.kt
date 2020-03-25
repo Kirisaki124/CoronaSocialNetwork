@@ -8,20 +8,16 @@ import hava.coronasocialnetwork.model.Post
 
 
 object DaoPostManagement {
-    fun addPost(post: Post): RegisterStatus {
-        DaoPost.addPost(post.ownerUid, post)
+    suspend fun addPost(post: Post, imageUri: Uri = Uri.EMPTY): RegisterStatus {
+        DaoPost.addPost(post.ownerUid, post, imageUri)
         return RegisterStatus.OK
     }
 
-    fun getPostQuery(uid: String): Query {
-        return DaoPost.getPostQuery(uid)
-    }
-
-    suspend fun getUserPostsById(uid: String): List<Post> {
+    fun getUserPostsById(uid: String): Query {
         return DaoPost.getUserPostsById(uid)
     }
 
-    suspend fun getNewFeed(): List<Post> {
+    fun getNewFeed(): Query {
         return DaoPost.getNewFeed()
     }
 
