@@ -9,6 +9,8 @@ import com.google.firebase.database.ValueEventListener
 import hava.coronasocialnetwork.database.context.DaoContext
 import hava.coronasocialnetwork.database.management.DaoUserManagement
 import hava.coronasocialnetwork.model.Post
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
@@ -16,15 +18,19 @@ import kotlin.coroutines.suspendCoroutine
 object DaoPost {
     fun addPost(currentUid: String, post: Post): RegisterStatus {
         val key = DaoContext.ref.child("Users").child(currentUid).child("posts").push().key
-        if (post.imageURI != Uri.EMPTY) {
-            val imageExtension = post.imageURI.path!!.substringAfterLast(".")
+        if (post.imageUri != Uri.EMPTY) {
+            val imageExtension = post.imageUri.path!!.substringAfterLast(".")
             DaoContext.ref.child("Users").child(currentUid).child("posts").child(key!!)
                 .child("image")
                 .setValue("$key.$imageExtension")
-            DaoContext.storageRef.child("images/$key.$imageExtension").putFile(post.imageURI)
+            DaoContext.storageRef.child("images/$key.$imageExtension").putFile(post.imageUri)
+        } else {
+            DaoContext.ref.child("Users").child(currentUid).child("posts").child(key!!)
+                .child("image")
+                .setValue("")
         }
 
-        DaoContext.ref.child("Users").child(currentUid).child("posts").child(key!!)
+        DaoContext.ref.child("Users").child(currentUid).child("posts").child(key)
             .child("ownerUid")
             .setValue(post.ownerUid)
 
@@ -52,12 +58,19 @@ object DaoPost {
                     }
 
                     override fun onDataChange(p0: DataSnapshot) {
-                        val list =
-                            p0.children.map { dataSnapshot -> dataSnapshot.getValue(Post::class.java)!! }
-
-                        cont.resume(list)
+                        GlobalScope.launch {
+                            val list =
+                                p0.children.map { dataSnapshot ->
+                                    Post(
+                                        dataSnapshot.child("caption").value.toString(),
+                                        dataSnapshot.child("ownerUid").value.toString(),
+                                        getPostImage(dataSnapshot.key!!),
+                                        dataSnapshot.child("createdDate").value.toString()
+                                    )
+                                }
+                            cont.resume(list)
+                        }
                     }
-
                 })
         }
     }
