@@ -72,7 +72,9 @@ object DaoUser {
                             dataSnapshot.child("username").value.toString(),
                             dataSnapshot.child("email").value.toString(),
                             dataSnapshot.child("phone").value.toString(),
-                            getAvatarById(uid)
+                            if (dataSnapshot.child("avatar").value.toString().trim() != "") getAvatarById(
+                                uid
+                            ) else Uri.EMPTY
                         )
                         cont.resume(user)
                     }
@@ -134,7 +136,7 @@ object DaoUser {
         if (imagePath.trim() != "") {
             val image = File(imagePath)
             val stream = FileInputStream(image)
-            val imageExtension = image.name.substringBeforeLast(".")
+            val imageExtension = image.name.substringAfterLast(".")
             DaoContext.ref.child("Users").child(uid).child("avatar")
                 .setValue("$uid.$imageExtension")
             DaoContext.storageRef.child("avatars/$uid.$imageExtension").putStream(stream)
