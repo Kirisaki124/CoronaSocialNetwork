@@ -31,16 +31,17 @@ object DaoUserManagement {
         }
     }
 
-    suspend fun addFriend(uid: String) {
-        DaoUser.addFriend(uid)
+    suspend fun addFriend(uid1: String, uid2: String) {
+        DaoUser.addFriend(uid1, uid2)
+        DaoUser.addFriend(uid2, uid1)
     }
 
     suspend fun getFriendList(uid: String): List<String> {
         return DaoUser.getFriendList(uid)
     }
 
-    fun setAvatar(imagePath: String): UpdateStatus {
-        return DaoUser.setAvatar(DaoContext.authen.currentUser!!.uid, imagePath)
+    fun setAvatar(imageUri: Uri): UpdateStatus {
+        return DaoUser.setAvatar(DaoContext.authen.currentUser!!.uid, imageUri)
     }
 
     suspend fun getAvatarById(uid: String): Uri {

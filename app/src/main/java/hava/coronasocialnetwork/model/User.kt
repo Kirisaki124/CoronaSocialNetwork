@@ -1,15 +1,19 @@
 package hava.coronasocialnetwork.model
 
-import android.net.Uri
-
 class User constructor(
     val username: String,
     val email: String,
-    val phone: String,
-    val avatar: Uri
+    val phone: String
 ) {
+    var id = ""
 
-    constructor() : this("", "", "", Uri.EMPTY)
-
+    constructor() : this("", "", "")
+    constructor(username: String, email: String, phone: String, id: String) : this(
+        username,
+        email,
+        phone
+    ) {
+        this.id = id
+    }
 }
 

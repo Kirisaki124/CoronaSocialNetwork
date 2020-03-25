@@ -9,8 +9,6 @@ import hava.coronasocialnetwork.database.context.DaoContext
 import hava.coronasocialnetwork.model.User
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.io.File
-import java.io.FileInputStream
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
@@ -68,14 +66,7 @@ object DaoUser {
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     GlobalScope.launch {
-                        val user = User(
-                            dataSnapshot.child("username").value.toString(),
-                            dataSnapshot.child("email").value.toString(),
-                            dataSnapshot.child("phone").value.toString(),
-                            if (dataSnapshot.child("avatar").value.toString().trim() != "") getAvatarById(
-                                uid
-                            ) else Uri.EMPTY
-                        )
+                        val user = dataSnapshot.getValue(User::class.java)
                         cont.resume(user)
                     }
                 }
@@ -99,17 +90,16 @@ object DaoUser {
         }
     }
 
-    suspend fun addFriend(uid: String) {
-        val currentRef = ref.child(DaoContext.authen.currentUser?.uid!!).child("friends").child(uid)
-        if (getUserInfo(uid) != null) {
+    suspend fun addFriend(uid1: String, uid2: String) {
+        val currentRef = ref.child(uid1).child("friends").child(uid2)
+        if (getUserInfo(uid2) != null) {
             currentRef.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
                     Log.i("Error", p0.message)
                 }
 
                 override fun onDataChange(p0: DataSnapshot) {
-                    Log.i("uid", uid)
-                    if (!p0.children.any { it.value?.equals(uid)!! }) currentRef.setValue(uid)
+                    if (!p0.children.any { it.value?.equals(uid2)!! }) currentRef.setValue(uid2)
                 }
             })
         }
@@ -132,22 +122,16 @@ object DaoUser {
         }
     }
 
-    fun setAvatar(uid: String, imagePath: String): UpdateStatus {
-        if (imagePath.trim() != "") {
-            val image = File(imagePath)
-            val stream = FileInputStream(image)
-            val imageExtension = image.name.substringAfterLast(".")
-            DaoContext.ref.child("Users").child(uid).child("avatar")
-                .setValue("$uid.$imageExtension")
-            DaoContext.storageRef.child("avatars/$uid.$imageExtension").putStream(stream)
-        }
+    fun setAvatar(uid: String, imageUri: Uri): UpdateStatus {
+        DaoContext.storageRef.child("avatars/$uid").putFile(imageUri)
+        DaoContext.ref.child("Users").child(uid).child("id").setValue(uid)
+
         return UpdateStatus.OK
     }
 
-
     suspend fun getAvatarById(uid: String): Uri {
         return suspendCoroutine { cont ->
-            DaoContext.storageRef.child("avatars/${uid}.jpg").downloadUrl.addOnCompleteListener {
+            DaoContext.storageRef.child("avatars/${uid}").downloadUrl.addOnCompleteListener {
                 if (it.isSuccessful) {
                     Log.i("URI", it.result.toString())
                     cont.resume(it.result!!)

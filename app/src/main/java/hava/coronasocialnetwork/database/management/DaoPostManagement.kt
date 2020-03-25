@@ -1,22 +1,23 @@
 package hava.coronasocialnetwork.database.management
 
 import android.net.Uri
+import com.google.firebase.database.Query
 import hava.coronasocialnetwork.database.operator.DaoPost
 import hava.coronasocialnetwork.database.operator.RegisterStatus
 import hava.coronasocialnetwork.model.Post
 
 
 object DaoPostManagement {
-    fun addPost(post: Post): RegisterStatus {
-        DaoPost.addPost(post.ownerUid, post)
+    suspend fun addPost(post: Post, imageUri: Uri = Uri.EMPTY): RegisterStatus {
+        DaoPost.addPost(post.ownerUid, post, imageUri)
         return RegisterStatus.OK
     }
 
-    suspend fun getUserPostsById(uid: String): List<Post> {
+    fun getUserPostsById(uid: String): Query {
         return DaoPost.getUserPostsById(uid)
     }
 
-    suspend fun getNewFeed(): List<Post> {
+    fun getNewFeed(): Query {
         return DaoPost.getNewFeed()
     }
 
