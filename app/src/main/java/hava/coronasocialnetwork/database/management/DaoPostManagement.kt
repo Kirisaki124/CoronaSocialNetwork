@@ -38,4 +38,12 @@ object DaoPostManagement {
         return DaoPost.getLikeByPostId(postId, valueListener)
     }
 
+    fun addCommentPostById(uid: String, postId: String, comment: String) {
+        return DaoPost.commentPostById(uid, postId, comment)
+    }
+
+    fun getAllCommentByPostId(postId: String): Query {
+        return DaoPost.getAllCommentByPostId(postId)
+    }
+
 }
