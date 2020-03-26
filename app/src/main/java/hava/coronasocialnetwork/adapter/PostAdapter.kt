@@ -1,5 +1,6 @@
 package hava.coronasocialnetwork.adapter
 
+import android.content.Intent
 import android.net.Uri
 import android.text.format.DateUtils
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import com.bumptech.glide.Glide
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import hava.coronasocialnetwork.R
+import hava.coronasocialnetwork.database.management.DaoPostManagement
 import hava.coronasocialnetwork.database.management.DaoUserManagement
 import hava.coronasocialnetwork.model.Post
 import kotlinx.android.synthetic.main.newfeed_post_layout.view.*
@@ -29,14 +31,16 @@ class PostAdapter(firebaseOptions: FirebaseRecyclerOptions<Post>) :
 
                     userNameText.text = user.username
 
-                    if (user.avatar != Uri.EMPTY) {
-                        Glide.with(this).load(user.avatar).into(avatarImage)
+                    if (DaoUserManagement.getAvatarById(user.id) != Uri.EMPTY) {
+                        Glide.with(this).load(DaoUserManagement.getAvatarById(user.id))
+                            .into(avatarImage)
                     }
 
-                    if (post.imageURI == Uri.EMPTY) {
+                    if (DaoPostManagement.getPostImage(post.id) == Uri.EMPTY) {
                         postImage.visibility = View.GONE
                     } else {
-                        Glide.with(this).load(post.imageURI).into(postImage)
+                        Glide.with(context.applicationContext)
+                            .load(DaoPostManagement.getPostImage(post.id)).into(postImage)
                     }
 
                     dateText.text = DateUtils.getRelativeTimeSpanString(Date(post.createdDate).time)

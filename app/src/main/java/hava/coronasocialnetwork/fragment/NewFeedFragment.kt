@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import hava.coronasocialnetwork.R
 import hava.coronasocialnetwork.adapter.PostAdapter
-import hava.coronasocialnetwork.database.management.DaoAuthenManagement
 import hava.coronasocialnetwork.database.management.DaoPostManagement
 import hava.coronasocialnetwork.model.Post
 import kotlinx.android.synthetic.main.newfeed_layout.view.*
@@ -35,15 +34,14 @@ class NewFeedFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         with(view) {
-            val postQuery =
-                DaoPostManagement.getPostQuery(DaoAuthenManagement.getCurrentUser()!!.uid)
+            val postQuery = DaoPostManagement.getNewFeed()
             val recyclerOptions = FirebaseRecyclerOptions.Builder<Post>().setQuery(postQuery) {
                 it.getValue(Post::class.java)!!
             }.build()
 
             postAdapter = PostAdapter(recyclerOptions)
-            postRecylerView.layoutManager = LinearLayoutManager(view.context)
-            postRecylerView.adapter = postAdapter
+            postRecyclerView.layoutManager = LinearLayoutManager(view.context)
+            postRecyclerView.adapter = postAdapter
         }
     }
 }
