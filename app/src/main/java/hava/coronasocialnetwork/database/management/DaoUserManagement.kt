@@ -27,7 +27,7 @@ object DaoUserManagement {
     suspend fun searchUserByName(username: String): List<String> {
         val uidList = DaoUser.searchUserByName()
         return uidList.filter { uid ->
-            getUserInfo(uid)?.run { username.contains(username) } ?: false
+            getUserInfo(uid)?.run { this.username.contains(username) } ?: false
         }
     }
 
