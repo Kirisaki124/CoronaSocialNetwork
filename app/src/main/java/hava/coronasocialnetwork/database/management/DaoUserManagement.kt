@@ -48,4 +48,8 @@ object DaoUserManagement {
         return DaoUser.getAvatarById(uid)
     }
 
+    suspend fun isFriend(uid: String, friendId: String): Boolean {
+        return DaoUser.isFriend(uid, friendId)
+    }
+
 }
