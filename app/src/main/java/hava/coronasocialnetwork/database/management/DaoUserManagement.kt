@@ -27,7 +27,7 @@ object DaoUserManagement {
     suspend fun searchUserByName(username: String): List<String> {
         val uidList = DaoUser.searchUserByName()
         return uidList.filter { uid ->
-            getUserInfo(uid)?.run { username.contains(username) } ?: false
+            getUserInfo(uid)?.run { this.username.contains(username) } ?: false
         }
     }
 
@@ -46,6 +46,10 @@ object DaoUserManagement {
 
     suspend fun getAvatarById(uid: String): Uri {
         return DaoUser.getAvatarById(uid)
+    }
+
+    suspend fun isFriend(uid: String, friendId: String): Boolean {
+        return DaoUser.isFriend(uid, friendId)
     }
 
 }

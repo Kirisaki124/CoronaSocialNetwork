@@ -1,9 +1,9 @@
 package hava.coronasocialnetwork.model
 
 class User constructor(
-    val username: String,
-    val email: String,
-    val phone: String
+    var username: String,
+    var email: String,
+    var phone: String
 ) {
     var id = ""
 

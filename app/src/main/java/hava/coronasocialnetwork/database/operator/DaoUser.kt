@@ -66,7 +66,10 @@ object DaoUser {
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     GlobalScope.launch {
-                        val user = dataSnapshot.getValue(User::class.java)
+                        val user = User()
+                        user.email = dataSnapshot.child("email").value.toString()
+                        user.phone = dataSnapshot.child("phone").value.toString()
+                        user.username = dataSnapshot.child("username").value.toString()
                         cont.resume(user)
                     }
                 }
@@ -83,8 +86,8 @@ object DaoUser {
                 }
 
                 override fun onDataChange(p0: DataSnapshot) {
-                    val list = p0.children.map { it.key!! }
-                    cont.resume(list)
+                    val listAllUser = p0.children.map { it.key!! }
+                    cont.resume(listAllUser)
                 }
             })
         }
@@ -118,6 +121,23 @@ object DaoUser {
                             p0.children.map { dataSnapshot -> dataSnapshot.getValue(String::class.java)!! }
                         cont.resume(friendList)
                     }
+                })
+        }
+    }
+
+    suspend fun isFriend(uid: String, friendId: String): Boolean {
+        return suspendCoroutine { cont ->
+            ref.child(uid).child("friends").child(friendId)
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onCancelled(p0: DatabaseError) {
+                        cont.resumeWithException(p0.toException())
+                    }
+
+                    override fun onDataChange(p0: DataSnapshot) {
+                        if (p0.value == friendId) cont.resume(true)
+                        else cont.resume(false)
+                    }
+
                 })
         }
     }
