@@ -66,7 +66,10 @@ object DaoUser {
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     GlobalScope.launch {
-                        val user = dataSnapshot.getValue(User::class.java)
+                        val user = User()
+                        user.email = dataSnapshot.child("email").value.toString()
+                        user.phone = dataSnapshot.child("phone").value.toString()
+                        user.username = dataSnapshot.child("username").value.toString()
                         cont.resume(user)
                     }
                 }
@@ -83,8 +86,8 @@ object DaoUser {
                 }
 
                 override fun onDataChange(p0: DataSnapshot) {
-                    val list = p0.children.map { it.key!! }
-                    cont.resume(list)
+                    val listAllUser = p0.children.map { it.key!! }
+                    cont.resume(listAllUser)
                 }
             })
         }
