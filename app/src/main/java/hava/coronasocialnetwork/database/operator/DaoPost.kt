@@ -1,12 +1,15 @@
 package hava.coronasocialnetwork.database.operator
 
 import android.net.Uri
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.Query
 import com.google.firebase.database.ValueEventListener
 import hava.coronasocialnetwork.database.context.DaoContext
 import hava.coronasocialnetwork.model.Post
 import java.util.*
 import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 object DaoPost {
@@ -64,6 +67,22 @@ object DaoPost {
 
     fun unlikePostById(uid: String, postId: String) {
         DaoContext.ref.child("Like").child(postId).child(uid).removeValue()
+    }
+
+    suspend fun isPostLiked(uid: String, postId: String): Boolean {
+        return suspendCoroutine { cont ->
+            DaoContext.ref.child("Like").child(postId)
+                .addValueEventListener(object : ValueEventListener {
+                    override fun onCancelled(p0: DatabaseError) {
+                        cont.resumeWithException(p0.toException())
+                    }
+
+                    override fun onDataChange(p0: DataSnapshot) {
+                        if (p0.hasChild(uid)) cont.resume(true)
+                        else cont.resume(false)
+                    }
+                })
+        }
     }
 
     fun getLikeByPostId(postId: String, valueListener: ValueEventListener) {
