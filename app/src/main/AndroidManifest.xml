@@ -15,6 +15,7 @@
         android:roundIcon="@mipmap/ic_logo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".activities.CreatePostActivity" />
         <activity android:name=".activities.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,6 +24,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.RegisterActivity" />
+        <activity android:name=".activities.SearchActivity" />
         <activity android:name=".MainActivity" />
     </application>
 
