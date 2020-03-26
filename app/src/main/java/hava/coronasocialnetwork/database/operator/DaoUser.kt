@@ -122,6 +122,23 @@ object DaoUser {
         }
     }
 
+    suspend fun isFriend(uid: String, friendId: String): Boolean {
+        return suspendCoroutine { cont ->
+            ref.child(uid).child("friends").child(friendId)
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onCancelled(p0: DatabaseError) {
+                        cont.resumeWithException(p0.toException())
+                    }
+
+                    override fun onDataChange(p0: DataSnapshot) {
+                        if (p0.value == friendId) cont.resume(true)
+                        else cont.resume(false)
+                    }
+
+                })
+        }
+    }
+
     fun setAvatar(uid: String, imageUri: Uri): UpdateStatus {
         DaoContext.storageRef.child("avatars/$uid").putFile(imageUri)
         DaoContext.ref.child("Users").child(uid).child("id").setValue(uid)
