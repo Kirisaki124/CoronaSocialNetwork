@@ -38,6 +38,10 @@ object DaoPostManagement {
         return DaoPost.getLikeByPostId(postId, valueListener)
     }
 
+    suspend fun isPostLiked(uid: String, postId: String): Boolean {
+        return DaoPost.isPostLiked(uid, postId)
+    }
+
     fun addCommentPostById(uid: String, postId: String, comment: String) {
         return DaoPost.commentPostById(uid, postId, comment)
     }
