@@ -8,6 +8,8 @@ import androidx.fragment.app.FragmentStatePagerAdapter
 import hava.coronasocialnetwork.fragment.MenuFragment
 import hava.coronasocialnetwork.fragment.NewFeedFragment
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,6 +37,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         setSupportActionBar(toolbar as Toolbar)
-//        supportActionBar?.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
+        GlobalScope.launch {
+        }
     }
 }

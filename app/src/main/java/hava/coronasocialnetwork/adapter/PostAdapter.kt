@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import hava.coronasocialnetwork.R
+import hava.coronasocialnetwork.activity.UserProfileActivity
 import hava.coronasocialnetwork.database.management.DaoPostManagement
 import hava.coronasocialnetwork.database.management.DaoUserManagement
 import hava.coronasocialnetwork.model.Post
@@ -30,6 +31,12 @@ class PostAdapter(firebaseOptions: FirebaseRecyclerOptions<Post>) :
                     val user = DaoUserManagement.getUserInfo(post.ownerUid)!!
 
                     userNameText.text = user.username
+                    userNameText.setOnClickListener {
+                        val intent = Intent(context, UserProfileActivity::class.java).apply {
+                            putExtra("uid", user.id)
+                        }
+                        context.startActivity(intent)
+                    }
 
                     if (DaoUserManagement.getAvatarById(user.id) != Uri.EMPTY) {
                         Glide.with(this).load(DaoUserManagement.getAvatarById(user.id))
