@@ -1,6 +1,7 @@
 package hava.coronasocialnetwork.activities
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.Menu
@@ -17,11 +18,12 @@ import kotlinx.android.synthetic.main.activity_create_post.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.io.File
 import java.util.*
 
 
 class CreatePostActivity : AppCompatActivity() {
-    private var imagePath: String = ""
+    private lateinit var imagePath: Uri
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -32,10 +34,11 @@ class CreatePostActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_create_post)
         btnPhoto.setOnClickListener(View.OnClickListener {
-            intent = Intent(
+            val intent = Intent(
                 Intent.ACTION_PICK,
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                MediaStore.Images.Media.INTERNAL_CONTENT_URI
             )
+            intent.type = "image/*"
             startActivityForResult(intent, 100)
         })
         setSupportActionBar(toolbar)
@@ -52,10 +55,13 @@ class CreatePostActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.btnPost -> {
                 val caption = etCaption.text.toString()
-                if (caption.trim() != "") {
+                if (caption.trim() != "" || imagePath.toString().trim() != "") {
                     val uid = DaoAuthenManagement.getCurrentUser()?.uid!!
-                    val post = Post(caption, uid, imagePath, Date().toString())
-                    DaoPostManagement.addPost(uid, post)
+                    val post = Post(caption, uid, Date().toString())
+                    GlobalScope.launch(Dispatchers.Main) {
+                        DaoPostManagement.addPost(post, imagePath)
+                    }
+                    finish()
                 }
                 true
             }
@@ -71,10 +77,24 @@ class CreatePostActivity : AppCompatActivity() {
         if (requestCode == 100) {
             imgImage.setImageURI(data?.data)
             imgImage.visibility = View.VISIBLE
-            imagePath = data?.data?.path!!
+            imagePath = Uri.fromFile(File(getRealPathFromURI(data?.data!!)))
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
 
+    private fun getRealPathFromURI(contentURI: Uri): String? {
+        val result: String?
+        val cursor =
+            contentResolver.query(contentURI, null, null, null, null)
+        if (cursor == null) { // Source is Dropbox or other similar local file path
+            result = contentURI.path
+        } else {
+            cursor.moveToFirst()
+            val idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
+            result = cursor.getString(idx)
+            cursor.close()
+        }
+        return result
+    }
 }
 

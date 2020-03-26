@@ -28,7 +28,7 @@
             app:strokeWidth="1dp">
 
             <ImageView
-                android:id="@+id/paymentlogo"
+                android:id="@+id/avatar"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_marginLeft="10dp"
