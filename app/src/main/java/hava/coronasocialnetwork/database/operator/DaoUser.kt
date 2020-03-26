@@ -1,11 +1,14 @@
 package hava.coronasocialnetwork.database.operator
 
+import android.net.Uri
 import android.util.Log
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import hava.coronasocialnetwork.database.context.DaoContext
 import hava.coronasocialnetwork.model.User
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
@@ -62,12 +65,10 @@ object DaoUser {
                 }
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    val user = User(
-                        dataSnapshot.child("username").value.toString(),
-                        dataSnapshot.child("email").value.toString(),
-                        dataSnapshot.child("phone").value.toString()
-                    )
-                    cont.resume(user)
+                    GlobalScope.launch {
+                        val user = dataSnapshot.getValue(User::class.java)
+                        cont.resume(user)
+                    }
                 }
             })
         }
@@ -89,17 +90,16 @@ object DaoUser {
         }
     }
 
-    suspend fun addFriend(uid: String) {
-        val currentRef = ref.child(DaoContext.authen.currentUser?.uid!!).child("friends").child(uid)
-        if (getUserInfo(uid) != null) {
+    suspend fun addFriend(uid1: String, uid2: String) {
+        val currentRef = ref.child(uid1).child("friends").child(uid2)
+        if (getUserInfo(uid2) != null) {
             currentRef.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
                     Log.i("Error", p0.message)
                 }
 
                 override fun onDataChange(p0: DataSnapshot) {
-                    Log.i("uid", uid)
-                    if (!p0.children.any { it.value?.equals(uid)!! }) currentRef.setValue(uid)
+                    if (!p0.children.any { it.value?.equals(uid2)!! }) currentRef.setValue(uid2)
                 }
             })
         }
@@ -118,8 +118,28 @@ object DaoUser {
                             p0.children.map { dataSnapshot -> dataSnapshot.getValue(String::class.java)!! }
                         cont.resume(friendList)
                     }
-
                 })
+        }
+    }
+
+    fun setAvatar(uid: String, imageUri: Uri): UpdateStatus {
+        DaoContext.storageRef.child("avatars/$uid").putFile(imageUri)
+        DaoContext.ref.child("Users").child(uid).child("id").setValue(uid)
+
+        return UpdateStatus.OK
+    }
+
+    suspend fun getAvatarById(uid: String): Uri {
+        return suspendCoroutine { cont ->
+            DaoContext.storageRef.child("avatars/${uid}").downloadUrl.addOnCompleteListener {
+                if (it.isSuccessful) {
+                    Log.i("URI", it.result.toString())
+                    cont.resume(it.result!!)
+                } else {
+                    Log.i("Error", it.exception.toString())
+                    cont.resumeWithException(it.exception!!)
+                }
+            }
         }
     }
 }

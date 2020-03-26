@@ -7,3 +7,7 @@ enum class LoginStatus {
 enum class RegisterStatus {
     EMAIL_ALREADY_EXISTED, WEAK_PASSWORD, OK, WRONG_EMAIL_FORMAT
 }
+
+enum class UpdateStatus {
+    OK, FAILED
+}

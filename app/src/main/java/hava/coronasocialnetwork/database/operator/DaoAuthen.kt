@@ -2,7 +2,6 @@ package hava.coronasocialnetwork.database.operator
 
 import com.google.firebase.auth.*
 import hava.coronasocialnetwork.database.context.DaoContext
-import hava.coronasocialnetwork.model.User
 import kotlinx.coroutines.tasks.await
 
 object DaoAuthen {
@@ -15,8 +14,21 @@ object DaoAuthen {
         try {
             DaoContext.authen.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
-                    DaoContext.ref.child("Users").child(task.result?.user?.uid.toString())
-                        .setValue(User(username, email, phone))
+                    try {
+                        DaoContext.ref.child("Users").child(task.result?.user?.uid.toString())
+                            .child("username").setValue(username)
+                        DaoContext.ref.child("Users").child(task.result?.user?.uid.toString())
+                            .child("email").setValue(email)
+                        DaoContext.ref.child("Users").child(task.result?.user?.uid.toString())
+                            .child("phone").setValue(phone)
+                        DaoContext.ref.child("Users").child(task.result?.user?.uid.toString())
+                            .child("avatar").setValue("")
+
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+//                    DaoContext.ref.child("Users").child(task.result?.user?.uid.toString())
+//                        .setValue(Uri.EMPTY)
                 }
                 .await()
         } catch (e: FirebaseAuthUserCollisionException) {
