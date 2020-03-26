@@ -12,12 +12,12 @@ object DaoChat {
 
     fun createRoomChat(uid1: String, uid2: String) {
         val key = ref.push().key!!
-        ref.child(uid1).child("ChatRoom").apply {
+        ref.child(uid1).child("ChatRoom").child(key).apply {
             child("uid1").setValue(uid1)
             child("uid2").setValue(uid2)
             child("id").setValue(key)
         }
-        ref.child(uid2).child("ChatRoom").apply {
+        ref.child(uid2).child("ChatRoom").child(key).apply {
             child("uid1").setValue(uid1)
             child("uid2").setValue(uid2)
             child("id").setValue(key)
@@ -25,8 +25,8 @@ object DaoChat {
     }
 
     fun addChatMessage(uid: String, chatRoomId: String, message: String) {
-        val key = ref.child(chatRoomId).child("chatHistory").push().key!!
-        ref.child(uid).child("ChatRoom")
+        val key = DaoContext.ref.child("Users").push().key!!
+        ref.child(uid).child("ChatRoom").child(chatRoomId)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
 //                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -51,6 +51,10 @@ object DaoChat {
     }
 
     fun getMessageFromChatRoom(uid: String, chatRoomId: String): Query {
-        return ref.child(uid).child("ChatHistory").child(chatRoomId)
+        return ref.child(uid).child("ChatRoom").child(chatRoomId).child("chatHistory")
+    }
+
+    fun getChatRoomByUserId(uid: String): Query {
+        return ref.child(uid).child("ChatRoom")
     }
 }
