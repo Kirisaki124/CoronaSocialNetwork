@@ -70,6 +70,7 @@ object DaoUser {
                         user.email = dataSnapshot.child("email").value.toString()
                         user.phone = dataSnapshot.child("phone").value.toString()
                         user.username = dataSnapshot.child("username").value.toString()
+                        user.id = dataSnapshot.key.toString()
                         cont.resume(user)
                     }
                 }
