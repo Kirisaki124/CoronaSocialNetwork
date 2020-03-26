@@ -2,6 +2,7 @@ package hava.coronasocialnetwork.database.management
 
 import android.net.Uri
 import com.google.firebase.database.Query
+import com.google.firebase.database.ValueEventListener
 import hava.coronasocialnetwork.database.operator.DaoPost
 import hava.coronasocialnetwork.database.operator.RegisterStatus
 import hava.coronasocialnetwork.model.Post
@@ -23,6 +24,18 @@ object DaoPostManagement {
 
     suspend fun getPostImage(postId: String): Uri {
         return DaoPost.getPostImage(postId)
+    }
+
+    fun likePostById(uid: String, postId: String) {
+        return DaoPost.likePostById(uid, postId)
+    }
+
+    fun unlikePostById(uid: String, postId: String) {
+        return DaoPost.unlikePostById(uid, postId)
+    }
+
+    fun getLikeByPostId(postId: String, valueListener: ValueEventListener) {
+        return DaoPost.getLikeByPostId(postId, valueListener)
     }
 
 }

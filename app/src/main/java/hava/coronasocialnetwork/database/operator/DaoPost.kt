@@ -2,6 +2,7 @@ package hava.coronasocialnetwork.database.operator
 
 import android.net.Uri
 import com.google.firebase.database.Query
+import com.google.firebase.database.ValueEventListener
 import hava.coronasocialnetwork.database.context.DaoContext
 import hava.coronasocialnetwork.model.Post
 import kotlin.coroutines.resume
@@ -54,5 +55,17 @@ object DaoPost {
                 }
             }
         }
+    }
+
+    fun likePostById(uid: String, postId: String) {
+        DaoContext.ref.child("Like").child(postId).child(uid).setValue(true)
+    }
+
+    fun unlikePostById(uid: String, postId: String) {
+        DaoContext.ref.child("Like").child(postId).child(uid).removeValue()
+    }
+
+    fun getLikeByPostId(postId: String, valueListener: ValueEventListener) {
+        DaoContext.ref.child("Like").child(postId).addValueEventListener(valueListener)
     }
 }
