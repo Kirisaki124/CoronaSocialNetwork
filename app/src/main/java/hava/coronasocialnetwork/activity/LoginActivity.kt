@@ -1,4 +1,4 @@
-package hava.coronasocialnetwork.activities
+package hava.coronasocialnetwork.activity
 
 import android.content.Intent
 import android.os.Bundle

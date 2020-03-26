@@ -7,8 +7,8 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
-import hava.coronasocialnetwork.activities.CreatePostActivity
-import hava.coronasocialnetwork.activities.SearchActivity
+import hava.coronasocialnetwork.activity.CreatePostActivity
+import hava.coronasocialnetwork.activity.SearchActivity
 import hava.coronasocialnetwork.database.management.DaoAuthenManagement
 import kotlinx.android.synthetic.main.activity_main.*
 

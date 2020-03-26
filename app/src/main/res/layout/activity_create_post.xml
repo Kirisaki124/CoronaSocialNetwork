@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="hava.coronasocialnetwork.activities.CreatePostActivity">
+    tools:context="hava.coronasocialnetwork.activity.CreatePostActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -28,7 +28,7 @@
             app:strokeWidth="1dp">
 
             <ImageView
-                android:id="@+id/avatar"
+                android:id="@+id/avatarImage"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_marginLeft="10dp"
@@ -75,18 +75,6 @@
         android:textAlignment="textStart"
         android:textColor="@android:color/black"
         app:icon="@drawable/ic_image"
-        app:strokeWidth="0dp" />
-
-    <Button
-        android:id="@+id/btnSetBackgound"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:text="Background Color"
-        android:textAlignment="textStart"
-        android:textColor="@android:color/black"
-        app:icon="@drawable/ic_background"
         app:strokeWidth="0dp" />
 
 
