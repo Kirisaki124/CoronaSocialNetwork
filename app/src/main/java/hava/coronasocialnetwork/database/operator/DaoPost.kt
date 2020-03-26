@@ -2,8 +2,10 @@ package hava.coronasocialnetwork.database.operator
 
 import android.net.Uri
 import com.google.firebase.database.Query
+import com.google.firebase.database.ValueEventListener
 import hava.coronasocialnetwork.database.context.DaoContext
 import hava.coronasocialnetwork.model.Post
+import java.util.*
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -54,5 +56,31 @@ object DaoPost {
                 }
             }
         }
+    }
+
+    fun likePostById(uid: String, postId: String) {
+        DaoContext.ref.child("Like").child(postId).child(uid).setValue(true)
+    }
+
+    fun unlikePostById(uid: String, postId: String) {
+        DaoContext.ref.child("Like").child(postId).child(uid).removeValue()
+    }
+
+    fun getLikeByPostId(postId: String, valueListener: ValueEventListener) {
+        DaoContext.ref.child("Like").child(postId).addValueEventListener(valueListener)
+    }
+
+    fun commentPostById(uid: String, postId: String, comment: String) {
+        val key = DaoContext.ref.child("Comment").child(postId).push().key
+        DaoContext.ref.child("Comment").child(postId).child(key!!).apply {
+            child("id").setValue(key)
+            child("uid").setValue(uid)
+            child("comment").setValue(comment)
+            child("createdDate").setValue(Date().time)
+        }
+    }
+
+    fun getAllCommentByPostId(postId: String): Query {
+        return DaoContext.ref.child("Comment").child(postId).orderByChild("createdDate")
     }
 }
