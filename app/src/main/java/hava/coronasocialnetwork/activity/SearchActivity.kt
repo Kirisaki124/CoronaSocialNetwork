@@ -1,4 +1,4 @@
-package hava.coronasocialnetwork.activities
+package hava.coronasocialnetwork.activity
 
 import android.os.Bundle
 import android.view.MenuItem
@@ -26,6 +26,7 @@ class SearchActivity : AppCompatActivity() {
         }
         setSupportActionBar(searchToolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = "Search: " + query
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

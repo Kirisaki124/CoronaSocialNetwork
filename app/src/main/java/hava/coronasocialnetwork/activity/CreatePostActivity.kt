@@ -1,4 +1,4 @@
-package hava.coronasocialnetwork.activities
+package hava.coronasocialnetwork.activity
 
 import android.content.Intent
 import android.net.Uri
@@ -9,6 +9,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import hava.coronasocialnetwork.R
 import hava.coronasocialnetwork.database.management.DaoAuthenManagement
 import hava.coronasocialnetwork.database.management.DaoPostManagement
@@ -30,6 +31,11 @@ class CreatePostActivity : AppCompatActivity() {
         GlobalScope.launch(Dispatchers.Main) {
             val user = DaoUserManagement.getUserInfo(DaoAuthenManagement.getCurrentUser()?.uid)
             txtUsername.text = user?.username
+            val avatar =
+                DaoUserManagement.getAvatarById(DaoAuthenManagement.getCurrentUser()?.uid!!)
+            if (avatar != Uri.EMPTY) {
+                Glide.with(this@CreatePostActivity).load(avatar).into(avatarImage)
+            }
         }
 
         setContentView(R.layout.activity_create_post)
@@ -77,7 +83,7 @@ class CreatePostActivity : AppCompatActivity() {
         if (requestCode == 100) {
             imgImage.setImageURI(data?.data)
             imgImage.visibility = View.VISIBLE
-            imagePath = Uri.fromFile(File(getRealPathFromURI(data?.data!!)))
+            imagePath = Uri.fromFile(File(getRealPathFromURI(data?.data!!)!!))
         }
         super.onActivityResult(requestCode, resultCode, data)
     }

@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/btnPost"
-        android:icon="@drawable/ic_add"
         android:title="Post"
         app:showAsAction="always|withText" />
 </menu>
