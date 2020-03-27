@@ -7,9 +7,13 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentStatePagerAdapter
 import hava.coronasocialnetwork.activity.CreatePostActivity
 import hava.coronasocialnetwork.activity.SearchActivity
-import hava.coronasocialnetwork.database.management.DaoAuthenManagement
+import hava.coronasocialnetwork.fragment.MenuFragment
+import hava.coronasocialnetwork.fragment.NewFeedFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -17,16 +21,27 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        btnCreate.setOnClickListener {
-            val intent = Intent(this, CreatePostActivity::class.java)
-            startActivity(intent)
+        viewPager.adapter = object : FragmentStatePagerAdapter(
+            supportFragmentManager,
+            BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
+        ) {
+            override fun getItem(position: Int) = when (position) {
+                0 -> NewFeedFragment()
+                3 -> MenuFragment()
+                else -> Fragment()
+            }
+
+            override fun getCount() = 4
+        }
+        tabLayout.setupWithViewPager(viewPager)
+        with(tabLayout) {
+            getTabAt(0)?.setIcon(R.drawable.ic_home)
+            getTabAt(1)?.setIcon(R.drawable.ic_chat)
+            getTabAt(2)?.setIcon(R.drawable.ic_notification)
+            getTabAt(3)?.setIcon(R.drawable.ic_menu)
         }
 
-        signOutButton.setOnClickListener {
-            DaoAuthenManagement.signOut()
-            finish()
-        }
-        setSupportActionBar(mainToolbar)
+        setSupportActionBar(toolbar as Toolbar)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

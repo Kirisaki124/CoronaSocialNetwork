@@ -24,7 +24,7 @@ import java.util.*
 
 
 class CreatePostActivity : AppCompatActivity() {
-    private lateinit var imagePath: Uri
+    private var imagePath: Uri = Uri.EMPTY
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -53,7 +53,7 @@ class CreatePostActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater: MenuInflater = menuInflater
-        inflater.inflate(R.menu.cretae_post_menu, menu)
+        inflater.inflate(R.menu.create_post_menu, menu)
         return true
     }
 

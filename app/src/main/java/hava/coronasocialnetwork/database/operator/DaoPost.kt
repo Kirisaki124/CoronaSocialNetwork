@@ -72,7 +72,7 @@ object DaoPost {
     suspend fun isPostLiked(uid: String, postId: String): Boolean {
         return suspendCoroutine { cont ->
             DaoContext.ref.child("Like").child(postId)
-                .addValueEventListener(object : ValueEventListener {
+                .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError) {
                         cont.resumeWithException(p0.toException())
                     }
