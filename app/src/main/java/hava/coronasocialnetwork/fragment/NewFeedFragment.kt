@@ -41,7 +41,10 @@ class NewFeedFragment : Fragment() {
 
             postAdapter = PostAdapter(recyclerOptions)
             postAdapter.setHasStableIds(true)
-            postRecyclerView.layoutManager = LinearLayoutManager(view.context)
+            postRecyclerView.layoutManager = LinearLayoutManager(view.context).apply {
+                reverseLayout = true
+                stackFromEnd = true
+            }
             postRecyclerView.adapter = postAdapter
         }
     }
