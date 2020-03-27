@@ -7,4 +7,9 @@
         android:icon="@drawable/ic_person_add"
         android:title="Add Friend"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/Chat"
+        android:icon="@drawable/ic_chat"
+        android:title="Go to Chat"
+        app:showAsAction="always" />
 </menu>

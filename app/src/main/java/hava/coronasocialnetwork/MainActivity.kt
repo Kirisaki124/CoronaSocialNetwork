@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentStatePagerAdapter
 import hava.coronasocialnetwork.activity.CreatePostActivity
 import hava.coronasocialnetwork.activity.SearchActivity
+import hava.coronasocialnetwork.fragment.HistoryChatFragment
 import hava.coronasocialnetwork.fragment.MenuFragment
 import hava.coronasocialnetwork.fragment.NewFeedFragment
 import kotlinx.android.synthetic.main.activity_main.*
@@ -28,6 +29,7 @@ class MainActivity : AppCompatActivity() {
             override fun getItem(position: Int) = when (position) {
                 0 -> NewFeedFragment()
                 3 -> MenuFragment()
+                1 -> HistoryChatFragment()
                 else -> Fragment()
             }
 
