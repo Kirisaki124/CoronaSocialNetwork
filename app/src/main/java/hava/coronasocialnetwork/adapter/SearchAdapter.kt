@@ -1,5 +1,6 @@
 package hava.coronasocialnetwork.adapter
 
+import android.content.Intent
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import hava.coronasocialnetwork.R
+import hava.coronasocialnetwork.activity.UserProfileActivity
 import hava.coronasocialnetwork.database.management.DaoUserManagement
 import kotlinx.android.synthetic.main.search_item_layout.view.*
 import kotlinx.coroutines.Dispatchers
@@ -28,7 +30,13 @@ class SearchAdapter(val uids: List<String>) :
                         Glide.with(this).load(avatar).into(searchAvatar)
                     }
                     setOnClickListener {
-                        Toast.makeText(itemView.context, uid, Toast.LENGTH_LONG).show()
+                        context.startActivity(
+                            Intent(
+                                context,
+                                UserProfileActivity::class.java
+                            ).apply {
+                                putExtra("uid", uid)
+                            })
                     }
                 }
             }
