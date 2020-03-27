@@ -26,7 +26,7 @@ class SearchActivity : AppCompatActivity() {
         }
         setSupportActionBar(searchToolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "Search: " + query
+        supportActionBar?.title = "Search: $query"
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
