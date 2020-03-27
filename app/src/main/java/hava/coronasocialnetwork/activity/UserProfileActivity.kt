@@ -14,6 +14,7 @@ import hava.coronasocialnetwork.adapter.PostAdapter
 import hava.coronasocialnetwork.database.context.DaoContext
 import hava.coronasocialnetwork.database.management.DaoPostManagement
 import hava.coronasocialnetwork.database.management.DaoUserManagement
+import hava.coronasocialnetwork.database.operator.DaoAuthen
 import hava.coronasocialnetwork.model.Post
 import kotlinx.android.synthetic.main.activity_user_profile.*
 import kotlinx.coroutines.Dispatchers
@@ -82,6 +83,15 @@ class UserProfileActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        GlobalScope.launch(Dispatchers.Main) {
+            val isFriend = DaoUserManagement.isFriend(
+                intent!!.getStringExtra("uid"),
+                DaoAuthen.getCurrentUser()!!.uid
+            )
+            if (isFriend) {
+                menu!!.findItem(R.id.addFriend).isVisible = false
+            }
+        }
         menuInflater.inflate(R.menu.add_friend_menu, menu)
         return true
     }

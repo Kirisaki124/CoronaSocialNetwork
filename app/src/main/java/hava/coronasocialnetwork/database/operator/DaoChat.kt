@@ -6,6 +6,9 @@ import com.google.firebase.database.Query
 import com.google.firebase.database.ValueEventListener
 import hava.coronasocialnetwork.database.context.DaoContext
 import java.util.*
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 object DaoChat {
     private val ref = DaoContext.ref.child(("Users"))
@@ -68,5 +71,26 @@ object DaoChat {
 
     fun getChatRoomByUserId(uid: String): Query {
         return ref.child(uid).child("ChatRoom")
+    }
+
+    suspend fun getChatRoomWithId(currentUid: String, friendUid: String): String {
+        return suspendCoroutine { cont ->
+            ref.child(currentUid).child("ChatRoom")
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onCancelled(p0: DatabaseError) {
+                        cont.resumeWithException(p0.toException())
+                    }
+
+                    override fun onDataChange(p0: DataSnapshot) {
+                        var key = ""
+                        for (item in p0.children) {
+                            if (item.child("uid1").value.toString() == friendUid || item.child("uid2").value.toString() == friendUid) {
+                                key = item.key!!
+                            }
+                        }
+                        cont.resume(key)
+                    }
+                })
+        }
     }
 }
