@@ -15,4 +15,8 @@ object DaoChatManagement {
     fun getMessageFromChatRoom(uid: String, chatRoomId: String): Query {
         return DaoChat.getMessageFromChatRoom(uid, chatRoomId)
     }
+
+    fun getChatRoomByUserId(uid: String): Query {
+        return DaoChat.getChatRoomByUserId(uid)
+    }
 }
