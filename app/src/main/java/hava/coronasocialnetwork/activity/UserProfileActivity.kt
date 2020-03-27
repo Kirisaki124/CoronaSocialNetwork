@@ -1,5 +1,6 @@
 package hava.coronasocialnetwork.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -12,6 +13,7 @@ import com.google.android.material.appbar.AppBarLayout
 import hava.coronasocialnetwork.R
 import hava.coronasocialnetwork.adapter.PostAdapter
 import hava.coronasocialnetwork.database.context.DaoContext
+import hava.coronasocialnetwork.database.management.DaoChatManagement
 import hava.coronasocialnetwork.database.management.DaoPostManagement
 import hava.coronasocialnetwork.database.management.DaoUserManagement
 import hava.coronasocialnetwork.database.operator.DaoAuthen
@@ -23,7 +25,7 @@ import kotlinx.coroutines.launch
 
 class UserProfileActivity : AppCompatActivity() {
     private lateinit var postAdapter: PostAdapter
-
+    private lateinit var uid: String
     override fun onStart() {
         super.onStart()
         postAdapter.startListening()
@@ -38,7 +40,7 @@ class UserProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_profile)
 
-        val uid = intent!!.getStringExtra("uid")
+        uid = intent!!.getStringExtra("uid")
 
         GlobalScope.launch(Dispatchers.Main) {
             Glide.with(this@UserProfileActivity).load(DaoUserManagement.getAvatarById(uid))
@@ -108,6 +110,16 @@ class UserProfileActivity : AppCompatActivity() {
                         DaoContext.authen.currentUser?.uid!!,
                         intent!!.getStringExtra("uid")
                     )
+                }
+                true
+            }
+            R.id.Chat -> {
+                GlobalScope.launch {
+                    val roomId = DaoChatManagement.getChatRoomWithId(uid)
+                    var intent = Intent(this@UserProfileActivity, ChatActivity::class.java)
+                    intent.putExtra("RoomID", roomId)
+                    intent.putExtra("thierUid", uid)
+                    startActivity(intent)
                 }
                 true
             }
