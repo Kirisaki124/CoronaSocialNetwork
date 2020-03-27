@@ -32,14 +32,11 @@ class ShowCommentActivity : AppCompatActivity() {
 
         val commentQuery = DaoPostManagement.getAllCommentByPostId(postId)
         val recyclerOptions = FirebaseRecyclerOptions.Builder<Comment>().setQuery(commentQuery) {
-            Comment(
-                it.child("comment").value.toString(),
-                it.child("uid").value.toString(),
-                it.child("createdDate").value.toString()
-            )
+            it.getValue(Comment::class.java)!!
         }.build()
 
         commentAdapter = CommentAdapter(recyclerOptions)
+        commentAdapter.setHasStableIds(true)
         commentRecyclerView.layoutManager = LinearLayoutManager(this)
         commentRecyclerView.adapter = commentAdapter
 

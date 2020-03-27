@@ -3,12 +3,12 @@ package hava.coronasocialnetwork.model
 class Comment constructor(
     var comment: String,
     var uid: String, // ownerId
-    var createdDate: String
+    var createdDate: Long
 ) {
     var id: String = ""
 
-    constructor() : this("", "", "")
-    constructor(comment: String, ownerUid: String, createdDate: String, id: String) : this(
+    constructor() : this("", "", 0)
+    constructor(comment: String, ownerUid: String, createdDate: Long, id: String) : this(
         comment,
         ownerUid,
         createdDate

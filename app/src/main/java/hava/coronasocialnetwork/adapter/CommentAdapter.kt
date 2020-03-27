@@ -47,4 +47,12 @@ class CommentAdapter(firebaseOptions: FirebaseRecyclerOptions<Comment>) :
             LayoutInflater.from(parent.context).inflate(R.layout.comment_item_layout, parent, false)
         return CommentViewHolder(view)
     }
+
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return position
+    }
 }
