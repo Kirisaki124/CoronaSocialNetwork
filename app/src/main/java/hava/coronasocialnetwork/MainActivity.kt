@@ -10,11 +10,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentStatePagerAdapter
+import hava.coronasocialnetwork.activity.CreatePostActivity
+import hava.coronasocialnetwork.activity.SearchActivity
 import hava.coronasocialnetwork.fragment.MenuFragment
 import hava.coronasocialnetwork.fragment.NewFeedFragment
-import hava.coronasocialnetwork.activities.CreatePostActivity
-import hava.coronasocialnetwork.activities.SearchActivity
-import hava.coronasocialnetwork.database.management.DaoAuthenManagement
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -43,8 +42,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         setSupportActionBar(toolbar as Toolbar)
-//        supportActionBar?.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
-        setSupportActionBar(mainToolbar)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

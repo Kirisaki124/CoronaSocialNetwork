@@ -39,15 +39,13 @@
                     android:id="@+id/userNameText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="User Name"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/dateText"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="1 day ago" />
+                    android:layout_height="wrap_content" />
             </LinearLayout>
 
         </LinearLayout>
@@ -68,14 +66,15 @@
                 android:id="@+id/postCaptionText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Today is awesome!!!!! :) :) :)"
                 android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp">
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp">
 
             <Button
                 android:id="@+id/loveButton"
@@ -83,7 +82,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="0 Love"
+                android:text="0 love"
                 android:textAllCaps="false"
                 android:textSize="14sp"
                 app:icon="@drawable/ic_favorite" />
@@ -95,7 +94,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="0 Comment"
+                android:text="0 comment"
                 android:textAllCaps="false"
                 android:textSize="14sp"
                 app:icon="@drawable/ic_comment" />

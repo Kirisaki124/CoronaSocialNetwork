@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="hava.coronasocialnetwork.activity.CreatePostActivity">
+    android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
+        style="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        app:titleTextColor="@android:color/white" />
+        android:layout_height="?actionBarSize"
+        android:background="?attr/colorPrimaryDark"
+        android:theme="@style/AppTheme.Toolbar"
+        app:title="Create Post" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="8dp"
         android:orientation="horizontal">
 
         <com.google.android.material.card.MaterialCardView
@@ -31,7 +31,6 @@
                 android:id="@+id/avatarImage"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:layout_marginLeft="10dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_person" />
         </com.google.android.material.card.MaterialCardView>
@@ -55,6 +54,7 @@
         android:layout_weight="10"
         android:gravity="start"
         android:hint="@string/post_hint"
+        android:layout_margin="8dp"
         android:textSize="23sp" />
 
     <ImageView
@@ -62,20 +62,17 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="5"
+        android:layout_margin="8dp"
         android:scaleType="centerCrop" />
-
 
     <Button
         android:id="@+id/btnPhoto"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
         android:text="Photo"
         android:textAlignment="textStart"
         android:textColor="@android:color/black"
         app:icon="@drawable/ic_image"
         app:strokeWidth="0dp" />
-
-
 </LinearLayout>
