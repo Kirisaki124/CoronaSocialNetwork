@@ -1,6 +1,7 @@
 package hava.coronasocialnetwork.database.management
 
 import com.google.firebase.database.Query
+import hava.coronasocialnetwork.database.context.DaoContext
 import hava.coronasocialnetwork.database.operator.DaoChat
 
 object DaoChatManagement {
@@ -20,7 +21,7 @@ object DaoChatManagement {
         return DaoChat.getChatRoomByUserId(uid)
     }
 
-    fun getLastMessage(uid: String, chatRoomId: String): Query {
-        return DaoChat.getLastMessage(uid, chatRoomId)
+    suspend fun getChatRoomWithId(uid: String): String {
+        return DaoChat.getChatRoomWithId(DaoContext.authen.currentUser!!.uid, uid)
     }
 }
