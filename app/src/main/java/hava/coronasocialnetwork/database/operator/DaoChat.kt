@@ -26,6 +26,7 @@ object DaoChat {
 
     fun addChatMessage(uid: String, chatRoomId: String, message: String) {
         val key = DaoContext.ref.child("Users").push().key!!
+        val time = Date().time
         ref.child(uid).child("ChatRoom").child(chatRoomId)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
@@ -36,14 +37,25 @@ object DaoChat {
                     ref.child(p0.child("uid1").value.toString()).child("ChatRoom").child(chatRoomId)
                         .child("chatHistory").child(key).apply {
                             child("uid").setValue(uid)
-                            child("createDate").setValue(Date().time)
+                            child("createDate").setValue(time)
                             child("message").setValue(message)
                         }
+                    ref.child(p0.child("uid1").value.toString()).child("ChatRoom").child(chatRoomId)
+                        .apply {
+                            child("lastMessage").setValue(message)
+                            child("lastUpdate").setValue(time)
+                        }
+
                     ref.child(p0.child("uid2").value.toString()).child("ChatRoom").child(chatRoomId)
                         .child("chatHistory").child(key).apply {
                             child("uid").setValue(uid)
-                            child("createDate").setValue(Date().time)
+                            child("createDate").setValue(time)
                             child("message").setValue(message)
+                        }
+                    ref.child(p0.child("uid2").value.toString()).child("ChatRoom").child(chatRoomId)
+                        .apply {
+                            child("lastMessage").setValue(message)
+                            child("lastUpdate").setValue(time)
                         }
                 }
 
@@ -56,10 +68,5 @@ object DaoChat {
 
     fun getChatRoomByUserId(uid: String): Query {
         return ref.child(uid).child("ChatRoom")
-    }
-
-    fun getLastMessage(uid: String, chatRoomId: String): Query {
-        return ref.child(uid).child("ChatRoom").child(chatRoomId).child("chatHistory")
-            .orderByChild("createdDate").limitToLast(1)
     }
 }
