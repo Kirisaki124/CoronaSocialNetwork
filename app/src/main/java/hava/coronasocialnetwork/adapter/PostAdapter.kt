@@ -15,8 +15,8 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import hava.coronasocialnetwork.R
-import hava.coronasocialnetwork.activity.UserProfileActivity
 import hava.coronasocialnetwork.activity.ShowCommentActivity
+import hava.coronasocialnetwork.activity.UserProfileActivity
 import hava.coronasocialnetwork.database.context.DaoContext
 import hava.coronasocialnetwork.database.management.DaoPostManagement
 import hava.coronasocialnetwork.database.management.DaoUserManagement
@@ -84,6 +84,17 @@ class PostAdapter(firebaseOptions: FirebaseRecyclerOptions<Post>) :
                         }
                     }
 
+                    DaoPostManagement.getAllCommentByPostId(post.id)
+                        .addValueEventListener(object : ValueEventListener {
+                            override fun onCancelled(p0: DatabaseError) {
+                            }
+
+                            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                                commentButton.text =
+                                    "${dataSnapshot.childrenCount} ${if (dataSnapshot.childrenCount > 1) "comments" else "comment"}"
+                            }
+                        })
+
                     commentButton.setOnClickListener {
                         context.startActivity(
                             Intent(
@@ -98,11 +109,8 @@ class PostAdapter(firebaseOptions: FirebaseRecyclerOptions<Post>) :
                         override fun onCancelled(p0: DatabaseError) {}
 
                         override fun onDataChange(dataSnapshot: DataSnapshot) {
-
-                            GlobalScope.launch(Dispatchers.Main) {
-                                loveButton.text =
-                                    "${dataSnapshot.childrenCount} ${if (dataSnapshot.childrenCount > 1) "loves" else "love"}"
-                            }
+                            loveButton.text =
+                                "${dataSnapshot.childrenCount} ${if (dataSnapshot.childrenCount > 1) "loves" else "love"}"
                         }
                     })
                 }
@@ -118,5 +126,13 @@ class PostAdapter(firebaseOptions: FirebaseRecyclerOptions<Post>) :
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.newfeed_post_layout, parent, false)
         return PostViewHolder(view)
+    }
+
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return position
     }
 }
