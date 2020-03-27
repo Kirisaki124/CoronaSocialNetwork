@@ -1,4 +1,4 @@
-package hava.coronasocialnetwork.activities
+package hava.coronasocialnetwork.activity
 
 import android.os.Bundle
 import android.view.MenuItem
@@ -21,11 +21,12 @@ class SearchActivity : AppCompatActivity() {
         GlobalScope.launch(Dispatchers.Main) {
             val uids: List<String> = DaoUserManagement.searchUserByName(query)
             val adapter = SearchAdapter(uids)
-            searchRecylerView.layoutManager = LinearLayoutManager(this@SearchActivity)
-            searchRecylerView.adapter = adapter
+            searchRecyclerView.layoutManager = LinearLayoutManager(this@SearchActivity)
+            searchRecyclerView.adapter = adapter
         }
         setSupportActionBar(searchToolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = "Search: $query"
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -1,6 +1,8 @@
-package hava.coronasocialnetwork.activities
+package hava.coronasocialnetwork.activity
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -9,6 +11,9 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import com.bumptech.glide.Glide
 import hava.coronasocialnetwork.R
 import hava.coronasocialnetwork.database.management.DaoAuthenManagement
 import hava.coronasocialnetwork.database.management.DaoPostManagement
@@ -21,33 +26,55 @@ import kotlinx.coroutines.launch
 import java.io.File
 import java.util.*
 
-
 class CreatePostActivity : AppCompatActivity() {
-    private lateinit var imagePath: Uri
+    private var imagePath: Uri = Uri.EMPTY
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         GlobalScope.launch(Dispatchers.Main) {
             val user = DaoUserManagement.getUserInfo(DaoAuthenManagement.getCurrentUser()?.uid)
             txtUsername.text = user?.username
+            val avatar =
+                DaoUserManagement.getAvatarById(DaoAuthenManagement.getCurrentUser()?.uid!!)
+            if (avatar != Uri.EMPTY) {
+                Glide.with(this@CreatePostActivity).load(avatar).into(avatarImage)
+            }
         }
 
         setContentView(R.layout.activity_create_post)
-        btnPhoto.setOnClickListener(View.OnClickListener {
-            val intent = Intent(
-                Intent.ACTION_PICK,
-                MediaStore.Images.Media.INTERNAL_CONTENT_URI
-            )
-            intent.type = "image/*"
-            startActivityForResult(intent, 100)
-        })
+        btnPhoto.setOnClickListener {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                    1
+                )
+            }
+
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                val intent = Intent(
+                    Intent.ACTION_PICK,
+                    MediaStore.Images.Media.INTERNAL_CONTENT_URI
+                )
+                intent.type = "image/*"
+                startActivityForResult(intent, 100)
+            }
+        }
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater: MenuInflater = menuInflater
-        inflater.inflate(R.menu.cretae_post_menu, menu)
+        inflater.inflate(R.menu.create_post_menu, menu)
         return true
     }
 
@@ -77,7 +104,7 @@ class CreatePostActivity : AppCompatActivity() {
         if (requestCode == 100) {
             imgImage.setImageURI(data?.data)
             imgImage.visibility = View.VISIBLE
-            imagePath = Uri.fromFile(File(getRealPathFromURI(data?.data!!)))
+            imagePath = Uri.fromFile(File(getRealPathFromURI(data?.data!!)!!))
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
