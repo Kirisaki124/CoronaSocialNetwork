@@ -57,4 +57,9 @@ object DaoChat {
     fun getChatRoomByUserId(uid: String): Query {
         return ref.child(uid).child("ChatRoom")
     }
+
+    fun getLastMessage(uid: String, chatRoomId: String): Query {
+        return ref.child(uid).child("ChatRoom").child(chatRoomId).child("chatHistory")
+            .orderByChild("createdDate").limitToLast(1)
+    }
 }
