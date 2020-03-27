@@ -17,6 +17,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".activity.ShowCommentActivity"></activity>
         <activity android:name=".activity.CreatePostActivity" />
+        <activity android:name=".activity.UserProfileActivity"></activity>
         <activity android:name=".activity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

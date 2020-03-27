@@ -15,6 +15,8 @@ import hava.coronasocialnetwork.activity.SearchActivity
 import hava.coronasocialnetwork.fragment.MenuFragment
 import hava.coronasocialnetwork.fragment.NewFeedFragment
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
