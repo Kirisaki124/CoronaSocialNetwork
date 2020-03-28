@@ -7,9 +7,8 @@ import java.util.*
 
 object DaoNoti {
     private val ref = DaoContext.ref.child("Users")
-    fun sendPostNoti(message: String, type: String, postId: String, ownerId: String) {
+    fun sendPostNoti(type: String, postId: String, ownerId: String) {
         ref.child(ownerId).child("Notification").child("NotiScreen").push().apply {
-            child("message").setValue(message)
             child("type").setValue(type)
             child("createdDate").setValue(Date().time)
             child("postId").setValue(postId)
@@ -17,10 +16,9 @@ object DaoNoti {
         }
     }
 
-    fun sendAddFriendNoti(message: String, uid: String) {
+    fun sendAddFriendNoti(uid: String) {
         ref.child(uid).child("Notification").push().apply {
             DaoNoti.ref.child(uid).child("Notification").child("NotiScreen").push().apply {
-                child("message").setValue(message)
                 child("type").setValue(Noti.ADD_FRIEND_NOTIFICATION)
                 child("createdDate").setValue(Date().time)
                 child("friendId").setValue(DaoContext.authen.currentUser!!.uid)
@@ -29,9 +27,8 @@ object DaoNoti {
 
     }
 
-    fun sendChatNoti(message: String, partnerUid: String, chatRoomId: String) {
+    fun sendChatNoti(partnerUid: String, chatRoomId: String) {
         ref.child(partnerUid).child("Notification").child("ChatNoti").push().apply {
-            child("message").setValue(message)
             child("type").setValue(Noti.CHAT_NOTIFICATION)
             child("chatRoomId").setValue(chatRoomId)
         }

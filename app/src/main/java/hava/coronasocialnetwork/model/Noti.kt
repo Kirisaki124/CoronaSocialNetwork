@@ -1,7 +1,6 @@
 package hava.coronasocialnetwork.model
 
 class Noti constructor(
-    var message: String,
     var type: String
 ) {
     companion object {
@@ -18,16 +17,14 @@ class Noti constructor(
     var chatRoomId: String = ""
     var createdDate: Long = 0
 
-    constructor() : this("", "")
+    constructor() : this("")
     constructor(
-        message: String,
         type: String,
         id: String,
         postIdOrFriendIdOrChatRoomId: String,
         senderId: String,
         createdDate: Long
     ) : this(
-        message,
         type
     ) {
         this.id = id
