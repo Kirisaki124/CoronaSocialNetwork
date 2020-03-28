@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import hava.coronasocialnetwork.R
 import hava.coronasocialnetwork.activity.LoginActivity
+import hava.coronasocialnetwork.activity.UserProfileActivity
+import hava.coronasocialnetwork.database.management.DaoAuthenManagement
 import hava.coronasocialnetwork.database.operator.DaoAuthen
 import kotlinx.android.synthetic.main.menu_layout.view.*
 
@@ -23,6 +25,11 @@ class MenuFragment : Fragment() {
             DaoAuthen.signout()
             startActivity(Intent(view.context, LoginActivity::class.java))
             activity?.finish()
+        }
+        view.userProfileButton.setOnClickListener {
+            var intent = Intent(view.context, UserProfileActivity::class.java)
+            intent.putExtra("uid", DaoAuthenManagement.getCurrentUser()!!.uid)
+            startActivity(intent)
         }
     }
 }
