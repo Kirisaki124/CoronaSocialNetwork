@@ -4,16 +4,16 @@ import com.google.firebase.database.Query
 import hava.coronasocialnetwork.database.operator.DaoNoti
 
 object DaoNotiManagement {
-    fun sendPostNoti(message: String, type: String, postId: String, ownerId: String) {
-        return DaoNoti.sendPostNoti(message, type, postId, ownerId)
+    fun sendPostNoti(type: String, postId: String, ownerId: String) {
+        return DaoNoti.sendPostNoti(type, postId, ownerId)
     }
 
-    fun sendAddFriendNoti(message: String, uid: String) {
-        return DaoNoti.sendAddFriendNoti(message, uid)
+    fun sendAddFriendNoti(uid: String) {
+        return DaoNoti.sendAddFriendNoti(uid)
     }
 
-    fun sendChatNoti(message: String, partnerUid: String, chatRoomId: String) {
-        return DaoNoti.sendChatNoti(message, partnerUid, chatRoomId)
+    fun sendChatNoti(partnerUid: String, chatRoomId: String) {
+        return DaoNoti.sendChatNoti(partnerUid, chatRoomId)
     }
 
     fun getAllNotiFromUid(uid: String): Query {
