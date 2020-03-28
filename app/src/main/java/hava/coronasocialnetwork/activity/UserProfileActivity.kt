@@ -1,11 +1,16 @@
 package hava.coronasocialnetwork.activity
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.firebase.ui.database.FirebaseRecyclerOptions
@@ -13,16 +18,14 @@ import com.google.android.material.appbar.AppBarLayout
 import hava.coronasocialnetwork.R
 import hava.coronasocialnetwork.adapter.PostAdapter
 import hava.coronasocialnetwork.database.context.DaoContext
-import hava.coronasocialnetwork.database.management.DaoChatManagement
-import hava.coronasocialnetwork.database.management.DaoNotiManagement
-import hava.coronasocialnetwork.database.management.DaoPostManagement
-import hava.coronasocialnetwork.database.management.DaoUserManagement
+import hava.coronasocialnetwork.database.management.*
 import hava.coronasocialnetwork.database.operator.DaoAuthen
 import hava.coronasocialnetwork.model.Post
 import kotlinx.android.synthetic.main.activity_user_profile.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.io.File
 
 class UserProfileActivity : AppCompatActivity() {
     private lateinit var postAdapter: PostAdapter
@@ -47,7 +50,22 @@ class UserProfileActivity : AppCompatActivity() {
             Glide.with(this@UserProfileActivity).load(DaoUserManagement.getAvatarById(uid))
                 .into(avatarImage)
         }
-
+        if (uid == DaoAuthenManagement.getCurrentUser()!!.uid) {
+            avatarImage.setOnClickListener {
+                if (ContextCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.READ_EXTERNAL_STORAGE
+                    ) == PackageManager.PERMISSION_GRANTED
+                ) {
+                    val intent = Intent(
+                        Intent.ACTION_PICK,
+                        MediaStore.Images.Media.INTERNAL_CONTENT_URI
+                    )
+                    intent.type = "image/*"
+                    startActivityForResult(intent, 100)
+                }
+            }
+        }
         val postQuery = DaoPostManagement.getUserPostsById(uid)
         val recyclerOptions = FirebaseRecyclerOptions.Builder<Post>().setQuery(postQuery) {
             it.getValue(Post::class.java)!!
@@ -128,5 +146,30 @@ class UserProfileActivity : AppCompatActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == 100) {
+            avatarImage.setImageURI(data?.data)
+            val imagePath = Uri.fromFile(File(getRealPathFromURI(data?.data!!)!!))
+            DaoUserManagement.setAvatar(imagePath)
+            finish()
+        }
+        super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    private fun getRealPathFromURI(contentURI: Uri): String? {
+        val result: String?
+        val cursor =
+            contentResolver.query(contentURI, null, null, null, null)
+        if (cursor == null) { // Source is Dropbox or other similar local file path
+            result = contentURI.path
+        } else {
+            cursor.moveToFirst()
+            val idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
+            result = cursor.getString(idx)
+            cursor.close()
+        }
+        return result
     }
 }

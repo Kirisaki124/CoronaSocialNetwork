@@ -22,7 +22,7 @@ object DaoAuthen {
                         DaoContext.ref.child("Users").child(task.result?.user?.uid.toString())
                             .child("phone").setValue(phone)
                         DaoContext.ref.child("Users").child(task.result?.user?.uid.toString())
-                            .child("avatar").setValue("")
+                            .child("avatar").setValue("defaultAvatar.jpg")
 
                     } catch (e: Exception) {
                         e.printStackTrace()

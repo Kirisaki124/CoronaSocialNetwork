@@ -52,7 +52,7 @@ class ShowCommentActivity : AppCompatActivity() {
                 DaoNotiManagement.sendPostNoti(
                     Noti.COMMENT_NOTIFICATION,
                     postId,
-                    DaoContext.authen.currentUser!!.uid
+                    intent.getStringExtra("ownerId")
                 )
                 commentEdit.text.clear()
             }

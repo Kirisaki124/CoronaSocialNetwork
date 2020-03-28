@@ -32,9 +32,18 @@ class ChatRoomAdapter(firebaseOptions: FirebaseRecyclerOptions<ChatRoom>) :
                     } else {
                         thierUid = room.uid1
                     }
-                    latestChat.text = room.lastMessage
-                    latestChatDate.text =
-                        DateUtils.getRelativeTimeSpanString(room.lastUpdate.toLong())
+                    if (room.lastMessage != "null" && room.lastMessage != "") {
+                        latestChat.text = room.lastMessage
+                    } else {
+                        latestChat.text = ""
+                    }
+                    if (room.lastUpdate != "null" && room.lastUpdate != "") {
+                        latestChatDate.text =
+                            DateUtils.getRelativeTimeSpanString(room.lastUpdate.toLong())
+                    } else {
+                        latestChatDate.text = ""
+                    }
+
 
                     txtUsernameHistoryChat.text = DaoUserManagement.getUserInfo(thierUid)!!.username
                     val avatar = DaoUserManagement.getAvatarById(thierUid)
