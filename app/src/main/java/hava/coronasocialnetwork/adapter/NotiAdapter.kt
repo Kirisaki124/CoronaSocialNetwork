@@ -22,6 +22,7 @@ import kotlinx.coroutines.launch
 
 class NotiAdapter(firebaseOptions: FirebaseRecyclerOptions<Noti>) :
     FirebaseRecyclerAdapter<Noti, NotiAdapter.NotiViewHolder>(firebaseOptions) {
+
     class NotiViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(noti: Noti) {
             GlobalScope.launch(Dispatchers.Main) {

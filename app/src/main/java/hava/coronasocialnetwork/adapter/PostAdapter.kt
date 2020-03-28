@@ -75,7 +75,7 @@ class PostAdapter(firebaseOptions: FirebaseRecyclerOptions<Post>) :
                     loveButton.setOnClickListener {
                         GlobalScope.launch(Dispatchers.Main) {
                             if (loveButton.currentTextColor == resources.getColor(R.color.colorPrimary)) {
-                                DaoPostManagement.unlikePostById(currentUserId, post.id)
+                                DaoPostManagement.unlikePostById(post.ownerUid, post.id)
                                 loveButton.setTextColor(resources.getColor(R.color.colorTextView))
                                 (loveButton as MaterialButton).setIconTintResource(R.color.colorTextView)
                             } else {
@@ -109,6 +109,7 @@ class PostAdapter(firebaseOptions: FirebaseRecyclerOptions<Post>) :
                                 ShowCommentActivity::class.java
                             ).apply {
                                 putExtra("postId", post.id)
+                                putExtra("ownerId", post.ownerUid)
                             })
                     }
 
