@@ -3,6 +3,7 @@ package hava.coronasocialnetwork.database.operator
 import com.google.firebase.database.Query
 import hava.coronasocialnetwork.database.context.DaoContext
 import hava.coronasocialnetwork.model.Noti
+import java.util.*
 
 object DaoNoti {
     private val ref = DaoContext.ref.child("Users")
@@ -10,6 +11,7 @@ object DaoNoti {
         ref.child(ownerId).child("Notification").child("NotiScreen").push().apply {
             child("message").setValue(message)
             child("type").setValue(type)
+            child("createdDate").setValue(Date().time)
             child("postId").setValue(postId)
             child("senderId").setValue(DaoContext.authen.currentUser!!.uid)
         }
@@ -20,6 +22,7 @@ object DaoNoti {
             DaoNoti.ref.child(uid).child("Notification").child("NotiScreen").push().apply {
                 child("message").setValue(message)
                 child("type").setValue(Noti.ADD_FRIEND_NOTIFICATION)
+                child("createdDate").setValue(Date().time)
                 child("friendId").setValue(DaoContext.authen.currentUser!!.uid)
             }
         }

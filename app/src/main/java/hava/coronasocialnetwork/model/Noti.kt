@@ -16,6 +16,7 @@ class Noti constructor(
     var postId: String = ""
     var friendId: String = ""
     var chatRoomId: String = ""
+    var createdDate: Long = 0
 
     constructor() : this("", "")
     constructor(
@@ -23,13 +24,15 @@ class Noti constructor(
         type: String,
         id: String,
         postIdOrFriendIdOrChatRoomId: String,
-        senderId: String
+        senderId: String,
+        createdDate: Long
     ) : this(
         message,
         type
     ) {
         this.id = id
         this.senderId = senderId
+        this.createdDate = createdDate
         if (type == LIKE_NOTIFICATION || type == COMMENT_NOTIFICATION) {
             this.postId = postIdOrFriendIdOrChatRoomId
         } else if (type == ADD_FRIEND_NOTIFICATION) {
