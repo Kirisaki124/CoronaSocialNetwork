@@ -15,6 +15,7 @@ import hava.coronasocialnetwork.activity.SearchActivity
 import hava.coronasocialnetwork.fragment.HistoryChatFragment
 import hava.coronasocialnetwork.fragment.MenuFragment
 import hava.coronasocialnetwork.fragment.NewFeedFragment
+import hava.coronasocialnetwork.fragment.NotiFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -30,6 +31,7 @@ class MainActivity : AppCompatActivity() {
                 0 -> NewFeedFragment()
                 3 -> MenuFragment()
                 1 -> HistoryChatFragment()
+                2 -> NotiFragment()
                 else -> Fragment()
             }
 
