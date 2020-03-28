@@ -19,4 +19,8 @@ object DaoNotiManagement {
     fun getAllNotiFromUid(uid: String): Query {
         return DaoNoti.getAllNotiFromUid(uid)
     }
+
+    fun getChatNotiFromUid(uid: String): Query {
+        return DaoNoti.getChatNotiFromUid(uid)
+    }
 }
