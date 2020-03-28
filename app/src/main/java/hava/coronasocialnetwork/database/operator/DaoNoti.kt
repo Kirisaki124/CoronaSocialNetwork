@@ -21,7 +21,7 @@ object DaoNoti {
             DaoNoti.ref.child(uid).child("Notification").child("NotiScreen").push().apply {
                 child("type").setValue(Noti.ADD_FRIEND_NOTIFICATION)
                 child("createdDate").setValue(Date().time)
-                child("friendId").setValue(DaoContext.authen.currentUser!!.uid)
+                child("senderId").setValue(DaoContext.authen.currentUser!!.uid)
             }
         }
 
@@ -31,6 +31,7 @@ object DaoNoti {
         ref.child(partnerUid).child("Notification").child("ChatNoti").push().apply {
             child("type").setValue(Noti.CHAT_NOTIFICATION)
             child("chatRoomId").setValue(chatRoomId)
+            child("senderId").setValue(DaoContext.authen.currentUser!!.uid)
         }
     }
 
