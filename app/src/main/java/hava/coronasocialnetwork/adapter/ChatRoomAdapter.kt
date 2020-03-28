@@ -44,7 +44,7 @@ class ChatRoomAdapter(firebaseOptions: FirebaseRecyclerOptions<ChatRoom>) :
                     setOnClickListener {
                         var intent = Intent(context, ChatActivity::class.java)
                         intent.putExtra("RoomID", room.chatRoomId)
-                        intent.putExtra("thierUid", thierUid)
+                        intent.putExtra("theirUid", thierUid)
                         context.startActivity(intent)
                     }
                 }
