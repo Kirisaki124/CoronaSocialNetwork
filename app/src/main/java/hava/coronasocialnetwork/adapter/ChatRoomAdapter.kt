@@ -32,12 +32,12 @@ class ChatRoomAdapter(firebaseOptions: FirebaseRecyclerOptions<ChatRoom>) :
                     } else {
                         thierUid = room.uid1
                     }
-                    if (room.lastMessage != "") {
+                    if (room.lastMessage != "null" && room.lastMessage != "") {
                         latestChat.text = room.lastMessage
                     } else {
                         latestChat.text = ""
                     }
-                    if (room.lastUpdate != "") {
+                    if (room.lastUpdate != "null" && room.lastUpdate != "") {
                         latestChatDate.text =
                             DateUtils.getRelativeTimeSpanString(room.lastUpdate.toLong())
                     } else {
