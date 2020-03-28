@@ -31,6 +31,7 @@ object DaoNoti {
         ref.child(partnerUid).child("Notification").child("ChatNoti").push().apply {
             child("type").setValue(Noti.CHAT_NOTIFICATION)
             child("chatRoomId").setValue(chatRoomId)
+            child("senderId").setValue(DaoContext.authen.currentUser!!.uid)
         }
     }
 

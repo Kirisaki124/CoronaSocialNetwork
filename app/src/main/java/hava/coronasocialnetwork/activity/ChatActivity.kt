@@ -42,7 +42,7 @@ class ChatActivity : AppCompatActivity() {
                     roomId,
                     editText.text.toString()
                 )
-                DaoNotiManagement.sendChatNoti(DaoAuthenManagement.getCurrentUser()!!.uid, roomId)
+                DaoNotiManagement.sendChatNoti(intent.getStringExtra("theirUid")!!, roomId)
             }
             editText.text.clear()
 
