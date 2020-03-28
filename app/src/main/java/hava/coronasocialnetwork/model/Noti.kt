@@ -12,19 +12,30 @@ class Noti constructor(
     }
 
     var id: String = ""
+    var senderId: String = ""
     var postId: String = ""
     var friendId: String = ""
+    var chatRoomId: String = ""
 
     constructor() : this("", "")
-    constructor(message: String, type: String, id: String, postIdOrFriendId: String) : this(
+    constructor(
+        message: String,
+        type: String,
+        id: String,
+        postIdOrFriendIdOrChatRoomId: String,
+        senderId: String
+    ) : this(
         message,
         type
     ) {
         this.id = id
+        this.senderId = senderId
         if (type == LIKE_NOTIFICATION || type == COMMENT_NOTIFICATION) {
-            this.postId = postIdOrFriendId
+            this.postId = postIdOrFriendIdOrChatRoomId
         } else if (type == ADD_FRIEND_NOTIFICATION) {
-            this.friendId = postIdOrFriendId
+            this.friendId = postIdOrFriendIdOrChatRoomId
+        } else if (type == CHAT_NOTIFICATION) {
+            this.chatRoomId = postIdOrFriendIdOrChatRoomId
         }
     }
 }
