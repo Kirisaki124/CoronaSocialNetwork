@@ -5,19 +5,20 @@ import hava.coronasocialnetwork.database.context.DaoContext
 import hava.coronasocialnetwork.model.Noti
 
 object DaoNoti {
-    val ref = DaoContext.ref.child("Users")
+    private val ref = DaoContext.ref.child("Users")
     fun sendPostNoti(message: String, type: String, postId: String, ownerId: String) {
-        val key = ref.child(ownerId).child("Notification").push().key!!
+        val key = ref.child(ownerId).child("Notification").child("NotiScreen").push().key!!
         ref.child(ownerId).child("Notification").child(key).apply {
             child("message").setValue(message)
             child("type").setValue(type)
             child("postId").setValue(postId)
+            child("senderId").setValue(DaoContext.authen.currentUser!!.uid)
         }
     }
 
     fun sendAddFriendNoti(message: String, uid: String) {
         val key = ref.child(uid).child("Notification").push().key!!
-        ref.child(uid).child("Notification").child(key).apply {
+        ref.child(uid).child("Notification").child(key).child("NotiScreen").apply {
             child("message").setValue(message)
             child("type").setValue(Noti.ADD_FRIEND_NOTIFICATION)
             child("friendId").setValue(DaoContext.authen.currentUser!!.uid)
