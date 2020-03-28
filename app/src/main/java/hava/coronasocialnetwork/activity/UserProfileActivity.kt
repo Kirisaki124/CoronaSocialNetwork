@@ -14,6 +14,7 @@ import hava.coronasocialnetwork.R
 import hava.coronasocialnetwork.adapter.PostAdapter
 import hava.coronasocialnetwork.database.context.DaoContext
 import hava.coronasocialnetwork.database.management.DaoChatManagement
+import hava.coronasocialnetwork.database.management.DaoNotiManagement
 import hava.coronasocialnetwork.database.management.DaoPostManagement
 import hava.coronasocialnetwork.database.management.DaoUserManagement
 import hava.coronasocialnetwork.database.operator.DaoAuthen
@@ -109,7 +110,9 @@ class UserProfileActivity : AppCompatActivity() {
                     DaoUserManagement.addFriend(
                         DaoContext.authen.currentUser?.uid!!,
                         intent!!.getStringExtra("uid")
+
                     )
+                    DaoNotiManagement.sendAddFriendNoti(uid)
                 }
                 true
             }
@@ -118,7 +121,7 @@ class UserProfileActivity : AppCompatActivity() {
                     val roomId = DaoChatManagement.getChatRoomWithId(uid)
                     var intent = Intent(this@UserProfileActivity, ChatActivity::class.java)
                     intent.putExtra("RoomID", roomId)
-                    intent.putExtra("thierUid", uid)
+                    intent.putExtra("theirUid", uid)
                     startActivity(intent)
                 }
                 true

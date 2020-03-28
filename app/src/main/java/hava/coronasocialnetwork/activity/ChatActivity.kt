@@ -9,6 +9,7 @@ import hava.coronasocialnetwork.R
 import hava.coronasocialnetwork.adapter.MessageAdapter
 import hava.coronasocialnetwork.database.management.DaoAuthenManagement
 import hava.coronasocialnetwork.database.management.DaoChatManagement
+import hava.coronasocialnetwork.database.management.DaoNotiManagement
 import hava.coronasocialnetwork.database.management.DaoUserManagement
 import hava.coronasocialnetwork.model.ChatMessage
 import kotlinx.android.synthetic.main.activity_chat.*
@@ -35,18 +36,22 @@ class ChatActivity : AppCompatActivity() {
         messageRecyclerView.layoutManager = LinearLayoutManager(this)
         messageRecyclerView.adapter = messageAdapter
         send.setOnClickListener {
-            DaoChatManagement.addChatMessage(
-                DaoAuthenManagement.getCurrentUser()!!.uid,
-                roomId,
-                editText.text.toString()
-            )
+            if (editText.text.toString() != "") {
+                DaoChatManagement.addChatMessage(
+                    DaoAuthenManagement.getCurrentUser()!!.uid,
+                    roomId,
+                    editText.text.toString()
+                )
+                DaoNotiManagement.sendChatNoti(DaoAuthenManagement.getCurrentUser()!!.uid, roomId)
+            }
             editText.text.clear()
+
         }
         setSupportActionBar(chatToolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         GlobalScope.launch(Dispatchers.Main) {
             supportActionBar?.title =
-                DaoUserManagement.getUserInfo(intent.getStringExtra("thierUid"))!!.username
+                DaoUserManagement.getUserInfo(intent.getStringExtra("theirUid"))!!.username
         }
     }
 

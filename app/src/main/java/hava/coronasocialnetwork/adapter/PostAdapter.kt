@@ -18,8 +18,10 @@ import hava.coronasocialnetwork.R
 import hava.coronasocialnetwork.activity.ShowCommentActivity
 import hava.coronasocialnetwork.activity.UserProfileActivity
 import hava.coronasocialnetwork.database.context.DaoContext
+import hava.coronasocialnetwork.database.management.DaoNotiManagement
 import hava.coronasocialnetwork.database.management.DaoPostManagement
 import hava.coronasocialnetwork.database.management.DaoUserManagement
+import hava.coronasocialnetwork.model.Noti
 import hava.coronasocialnetwork.model.Post
 import kotlinx.android.synthetic.main.newfeed_post_layout.view.*
 import kotlinx.coroutines.Dispatchers
@@ -78,6 +80,11 @@ class PostAdapter(firebaseOptions: FirebaseRecyclerOptions<Post>) :
                                 (loveButton as MaterialButton).setIconTintResource(R.color.colorTextView)
                             } else {
                                 DaoPostManagement.likePostById(currentUserId, post.id)
+                                DaoNotiManagement.sendPostNoti(
+                                    Noti.LIKE_NOTIFICATION,
+                                    post.id,
+                                    currentUserId
+                                )
                                 loveButton.setTextColor(resources.getColor(R.color.colorPrimary))
                                 (loveButton as MaterialButton).setIconTintResource(R.color.colorPrimary)
                             }
