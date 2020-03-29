@@ -38,14 +38,17 @@ class NotiFragment : Fragment() {
                 DaoNotiManagement.getAllNotiFromUid(DaoAuthenManagement.getCurrentUser()!!.uid)
             val recyclerOptions = FirebaseRecyclerOptions.Builder<Noti>().setQuery(notiquery) {
                 val noti = Noti()
-                noti.createdDate = it.child("createdDate").value.toString().toLong()
+                if (it.child("createdDate").value.toString() != "null" && !it.child("createdDate").value.toString()
+                        .isBlank()
+                ) {
+                    noti.createdDate = it.child("createdDate").value.toString().toLong()
+                }
                 noti.type = it.child("type").value.toString()
                 noti.postId = it.child("postId").value.toString()
                 noti.senderId = it.child("senderId").value.toString()
                 noti
             }.build()
             notiAdapter = NotiAdapter(recyclerOptions)
-            notiAdapter.setHasStableIds(true)
             notiRecycleView.layoutManager = LinearLayoutManager(view.context)
             notiRecycleView.adapter = notiAdapter
         }

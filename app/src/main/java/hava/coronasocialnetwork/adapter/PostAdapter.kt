@@ -83,7 +83,7 @@ class PostAdapter(firebaseOptions: FirebaseRecyclerOptions<Post>) :
                                 DaoNotiManagement.sendPostNoti(
                                     Noti.LIKE_NOTIFICATION,
                                     post.id,
-                                    currentUserId
+                                    post.ownerUid
                                 )
                                 loveButton.setTextColor(resources.getColor(R.color.colorPrimary))
                                 (loveButton as MaterialButton).setIconTintResource(R.color.colorPrimary)
