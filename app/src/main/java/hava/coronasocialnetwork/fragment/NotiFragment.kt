@@ -49,7 +49,6 @@ class NotiFragment : Fragment() {
                 noti
             }.build()
             notiAdapter = NotiAdapter(recyclerOptions)
-            notiAdapter.setHasStableIds(true)
             notiRecycleView.layoutManager = LinearLayoutManager(view.context)
             notiRecycleView.adapter = notiAdapter
         }
