@@ -30,7 +30,7 @@ object DaoNoti {
     }
 
     fun sendChatNoti(partnerUid: String, chatRoomId: String) {
-        ref.child(partnerUid).child("Notification").child("ChatNoti").push().apply {
+        ref.child(partnerUid).child("Notification").child("ChatNoti").child(chatRoomId).apply {
             child("senderId").setValue(DaoContext.authen.currentUser!!.uid)
             child("seen").setValue(false)
             child("type").setValue(Noti.CHAT_NOTIFICATION)
@@ -48,6 +48,8 @@ object DaoNoti {
 
     fun markChatAsRead(uid: String, roomId: String) {
         ref.child(uid).child("ChatRoom").child(roomId).child("seen").setValue(true)
+        ref.child(uid).child("Notification").child("ChatNoti").child(roomId).child("seen")
+            .setValue(true)
     }
 
     fun markAsSeen(uid: String, notiId: String) {

@@ -64,6 +64,8 @@ object DaoChat {
                     if (DaoContext.authen.currentUser!!.uid == p0.child("uid1").value.toString()) {
                         ref.child(p0.child("uid2").value.toString()).child("ChatRoom")
                             .child(chatRoomId).child("seen").setValue(false)
+                        ref.child(p0.child("uid2").value.toString()).child("ChatRoom")
+                            .child(chatRoomId).child("seen").setValue(false)
                     } else if (DaoContext.authen.currentUser!!.uid == p0.child("uid2").value.toString()) {
                         ref.child(p0.child("uid1").value.toString()).child("ChatRoom")
                             .child(chatRoomId).child("seen").setValue(false)
