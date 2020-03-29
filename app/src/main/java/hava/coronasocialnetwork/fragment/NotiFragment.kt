@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import hava.coronasocialnetwork.R
@@ -43,13 +44,24 @@ class NotiFragment : Fragment() {
                 ) {
                     noti.createdDate = it.child("createdDate").value.toString().toLong()
                 }
+                noti.id = it.child("id").value.toString()
                 noti.type = it.child("type").value.toString()
                 noti.postId = it.child("postId").value.toString()
                 noti.senderId = it.child("senderId").value.toString()
+                noti.seen = it.child("seen").value.toString().toBoolean()
                 noti
             }.build()
             notiAdapter = NotiAdapter(recyclerOptions)
-            notiRecycleView.layoutManager = LinearLayoutManager(view.context)
+            notiRecycleView.layoutManager = LinearLayoutManager(view.context).apply {
+                reverseLayout = true
+                stackFromEnd = true
+            }
+            notiRecycleView.addItemDecoration(
+                DividerItemDecoration(
+                    context,
+                    DividerItemDecoration.VERTICAL
+                )
+            )
             notiRecycleView.adapter = notiAdapter
         }
     }

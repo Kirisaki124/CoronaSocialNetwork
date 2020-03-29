@@ -15,6 +15,7 @@ class Noti constructor(
     var postId: String = ""
     var chatRoomId: String = ""
     var createdDate: Long = 0
+    var seen: Boolean = false
 
     constructor() : this("")
     constructor(

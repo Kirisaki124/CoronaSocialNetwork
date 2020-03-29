@@ -10,8 +10,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentStatePagerAdapter
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import hava.coronasocialnetwork.activity.CreatePostActivity
 import hava.coronasocialnetwork.activity.SearchActivity
+import hava.coronasocialnetwork.database.context.DaoContext
+import hava.coronasocialnetwork.database.management.DaoNotiManagement
 import hava.coronasocialnetwork.fragment.HistoryChatFragment
 import hava.coronasocialnetwork.fragment.MenuFragment
 import hava.coronasocialnetwork.fragment.NewFeedFragment
@@ -29,9 +34,9 @@ class MainActivity : AppCompatActivity() {
         ) {
             override fun getItem(position: Int) = when (position) {
                 0 -> NewFeedFragment()
-                3 -> MenuFragment()
                 1 -> HistoryChatFragment()
                 2 -> NotiFragment()
+                3 -> MenuFragment()
                 else -> Fragment()
             }
 
@@ -46,6 +51,31 @@ class MainActivity : AppCompatActivity() {
         }
 
         setSupportActionBar(toolbar as Toolbar)
+
+        setupNotification()
+    }
+
+    private fun setupNotification() {
+        DaoNotiManagement.getAllNotiFromUid(DaoContext.authen.currentUser!!.uid)
+            .orderByChild("seen").equalTo(false).addValueEventListener(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {}
+                override fun onDataChange(p0: DataSnapshot) {
+                    val count = p0.children.count()
+                    val badge = tabLayout.getTabAt(2)!!.orCreateBadge
+                    badge.isVisible = count > 0
+                    badge.number = count
+                }
+            })
+        DaoNotiManagement.getChatNotiFromUid(DaoContext.authen.currentUser!!.uid)
+            .orderByChild("seen").equalTo(false).addValueEventListener(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {}
+                override fun onDataChange(p0: DataSnapshot) {
+                    val count = p0.children.count()
+                    val badge = tabLayout.getTabAt(1)!!.orCreateBadge
+                    badge.isVisible = count > 0
+                    badge.number = count
+                }
+            })
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

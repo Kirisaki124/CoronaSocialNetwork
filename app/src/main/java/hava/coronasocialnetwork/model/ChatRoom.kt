@@ -7,7 +7,7 @@ class ChatRoom constructor(
     var lastUpdate: String
 ) {
     var chatRoomId: String = ""
-
+    var seen: Boolean = false
     constructor() : this("", "", "", "")
     constructor(
         uid1: String,

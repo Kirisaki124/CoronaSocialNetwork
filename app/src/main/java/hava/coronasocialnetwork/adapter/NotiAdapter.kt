@@ -13,6 +13,8 @@ import com.firebase.ui.database.FirebaseRecyclerOptions
 import hava.coronasocialnetwork.R
 import hava.coronasocialnetwork.activity.ShowCommentActivity
 import hava.coronasocialnetwork.activity.UserProfileActivity
+import hava.coronasocialnetwork.database.context.DaoContext
+import hava.coronasocialnetwork.database.management.DaoNotiManagement
 import hava.coronasocialnetwork.database.management.DaoUserManagement
 import hava.coronasocialnetwork.model.Noti
 import kotlinx.android.synthetic.main.noti_item_layout.view.*
@@ -26,18 +28,23 @@ class NotiAdapter(firebaseOptions: FirebaseRecyclerOptions<Noti>) :
         fun bind(noti: Noti) {
             GlobalScope.launch(Dispatchers.Main) {
                 with(itemView) {
+                    if (!noti.seen) {
+                        setBackgroundColor(resources.getColor(R.color.colorTextView))
+                    }
                     val userName = DaoUserManagement.getUserInfo(noti.senderId)!!.username
                     txtUsernameNoti.text = userName
                     val avatar = DaoUserManagement.getAvatarById(noti.senderId)
                     if (avatar != Uri.EMPTY) {
                         Glide.with(this).load(avatar).into(notiAvatar)
                     }
+                    val currentUid = DaoContext.authen.currentUser!!.uid
                     when (noti.type) {
                         Noti.ADD_FRIEND_NOTIFICATION -> {
                             notiContent.text = userName + " added you as friend"
                             setOnClickListener {
                                 var intent = Intent(context, UserProfileActivity::class.java)
                                 intent.putExtra("uid", noti.senderId)
+                                DaoNotiManagement.markPostAsSeen(currentUid, noti.id)
                                 context.startActivity(intent)
                             }
                         }
@@ -46,6 +53,7 @@ class NotiAdapter(firebaseOptions: FirebaseRecyclerOptions<Noti>) :
                             setOnClickListener {
                                 var intent = Intent(context, ShowCommentActivity::class.java)
                                 intent.putExtra("postId", noti.postId)
+                                DaoNotiManagement.markPostAsSeen(currentUid, noti.id)
                                 context.startActivity(intent)
                             }
                         }
@@ -54,6 +62,7 @@ class NotiAdapter(firebaseOptions: FirebaseRecyclerOptions<Noti>) :
                             setOnClickListener {
                                 var intent = Intent(context, ShowCommentActivity::class.java)
                                 intent.putExtra("postId", noti.postId)
+                                DaoNotiManagement.markPostAsSeen(currentUid, noti.id)
                                 context.startActivity(intent)
                             }
 

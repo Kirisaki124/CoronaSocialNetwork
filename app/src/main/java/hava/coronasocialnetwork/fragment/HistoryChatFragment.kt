@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import hava.coronasocialnetwork.R
@@ -43,11 +44,21 @@ class HistoryChatFragment : Fragment() {
                 room.uid2 = it.child("uid2").value.toString()
                 room.lastMessage = it.child("lastMessage").value.toString()
                 room.lastUpdate = it.child("lastUpdate").value.toString()
+                room.seen = it.child("seen").value.toString().toBoolean()
                 room
             }.build()
 
             roomAdapter = ChatRoomAdapter(recyclerOptions)
-            chatRoomRecyclerView.layoutManager = LinearLayoutManager(view.context)
+            chatRoomRecyclerView.layoutManager = LinearLayoutManager(view.context).apply {
+                reverseLayout = true
+                stackFromEnd = true
+            }
+            chatRoomRecyclerView.addItemDecoration(
+                DividerItemDecoration(
+                    context,
+                    DividerItemDecoration.VERTICAL
+                )
+            )
             chatRoomRecyclerView.adapter = roomAdapter
         }
     }
