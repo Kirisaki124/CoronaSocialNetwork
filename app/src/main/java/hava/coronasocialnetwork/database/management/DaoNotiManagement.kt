@@ -24,9 +24,9 @@ object DaoNotiManagement {
         return DaoNoti.getChatNotiFromUid(uid)
     }
 
-    fun deleteAllChatNoti(uid: String) = DaoNoti.deleteAllChatNoti(uid)
+    fun markChatAsRead(uid: String, roomId: String) = DaoNoti.markChatAsRead(uid, roomId)
 
-    fun markAsSeen(uid: String, notiId: String) {
+    fun markPostAsSeen(uid: String, notiId: String) {
         DaoNoti.markAsSeen(uid, notiId)
     }
 }

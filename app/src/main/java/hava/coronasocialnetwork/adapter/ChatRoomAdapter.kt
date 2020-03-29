@@ -13,6 +13,7 @@ import com.firebase.ui.database.FirebaseRecyclerOptions
 import hava.coronasocialnetwork.R
 import hava.coronasocialnetwork.activity.ChatActivity
 import hava.coronasocialnetwork.database.management.DaoAuthenManagement
+import hava.coronasocialnetwork.database.management.DaoNotiManagement
 import hava.coronasocialnetwork.database.management.DaoUserManagement
 import hava.coronasocialnetwork.model.ChatRoom
 import kotlinx.android.synthetic.main.chat_history_item_layout.view.*
@@ -26,6 +27,10 @@ class ChatRoomAdapter(firebaseOptions: FirebaseRecyclerOptions<ChatRoom>) :
         fun bind(room: ChatRoom) {
             GlobalScope.launch(Dispatchers.Main) {
                 with(itemView) {
+                    if (!room.seen) {
+                        setBackgroundColor(resources.getColor(R.color.colorTextView))
+                    }
+                    // TODO: Add seen to chatroom history
                     var thierUid: String
                     if (room.uid1 == DaoAuthenManagement.getCurrentUser()!!.uid) {
                         thierUid = room.uid2
@@ -54,6 +59,10 @@ class ChatRoomAdapter(firebaseOptions: FirebaseRecyclerOptions<ChatRoom>) :
                         var intent = Intent(context, ChatActivity::class.java)
                         intent.putExtra("RoomID", room.chatRoomId)
                         intent.putExtra("theirUid", thierUid)
+                        DaoNotiManagement.markChatAsRead(
+                            DaoAuthenManagement.getCurrentUser()!!.uid,
+                            room.chatRoomId
+                        )
                         context.startActivity(intent)
                     }
                 }
