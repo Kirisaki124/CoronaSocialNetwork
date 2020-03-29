@@ -23,4 +23,10 @@ object DaoNotiManagement {
     fun getChatNotiFromUid(uid: String): Query {
         return DaoNoti.getChatNotiFromUid(uid)
     }
+
+    fun deleteAllChatNoti(uid: String) = DaoNoti.deleteAllChatNoti(uid)
+
+    fun markAsSeen(uid: String, notiId: String) {
+        DaoNoti.markAsSeen(uid, notiId)
+    }
 }
