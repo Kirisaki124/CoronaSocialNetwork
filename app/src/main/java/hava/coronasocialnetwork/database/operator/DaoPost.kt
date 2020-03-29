@@ -92,8 +92,8 @@ object DaoPost {
     fun commentPostById(uid: String, postId: String, comment: String) {
         val key = DaoContext.ref.child("Comment").child(postId).push().key
         DaoContext.ref.child("Comment").child(postId).child(key!!).apply {
-            child("id").setValue(key)
             child("uid").setValue(uid)
+            child("id").setValue(key)
             child("comment").setValue(comment)
             child("createdDate").setValue(Date().time)
         }

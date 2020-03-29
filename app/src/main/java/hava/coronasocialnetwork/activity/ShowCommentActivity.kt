@@ -7,8 +7,10 @@ import com.firebase.ui.database.FirebaseRecyclerOptions
 import hava.coronasocialnetwork.R
 import hava.coronasocialnetwork.adapter.CommentAdapter
 import hava.coronasocialnetwork.database.context.DaoContext
+import hava.coronasocialnetwork.database.management.DaoNotiManagement
 import hava.coronasocialnetwork.database.management.DaoPostManagement
 import hava.coronasocialnetwork.model.Comment
+import hava.coronasocialnetwork.model.Noti
 import kotlinx.android.synthetic.main.activity_show_comment.*
 
 class ShowCommentActivity : AppCompatActivity() {
@@ -46,6 +48,11 @@ class ShowCommentActivity : AppCompatActivity() {
                     DaoContext.authen.currentUser!!.uid,
                     postId,
                     commentEdit.text.toString()
+                )
+                DaoNotiManagement.sendPostNoti(
+                    Noti.COMMENT_NOTIFICATION,
+                    postId,
+                    intent.getStringExtra("ownerId")
                 )
                 commentEdit.text.clear()
             }
