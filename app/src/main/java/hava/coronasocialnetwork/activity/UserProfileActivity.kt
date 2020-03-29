@@ -112,6 +112,10 @@ class UserProfileActivity : AppCompatActivity() {
             if (isFriend) {
                 menu!!.findItem(R.id.addFriend).isVisible = false
             }
+            if (uid == DaoAuthen.getCurrentUser()!!.uid) {
+                menu!!.findItem(R.id.addFriend).isVisible = false
+                menu.findItem(R.id.Chat).isVisible = false
+            }
         }
         menuInflater.inflate(R.menu.add_friend_menu, menu)
         return true

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import hava.coronasocialnetwork.R
 import hava.coronasocialnetwork.adapter.MessageAdapter
@@ -29,10 +30,26 @@ class ChatActivity : AppCompatActivity() {
         )
         val recyclerOptions =
             FirebaseRecyclerOptions.Builder<ChatMessage>().setQuery(messageQuery) {
+                messageRecyclerView.smoothScrollToPosition(messageRecyclerView!!.adapter!!.itemCount)
                 it.getValue(ChatMessage::class.java)!!
             }.build()
 
         messageAdapter = MessageAdapter(recyclerOptions)
+        var isAtBottom = false
+        messageRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                isAtBottom = !messageRecyclerView.canScrollVertically(1)
+            }
+        })
+        messageAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                super.onItemRangeInserted(positionStart, itemCount)
+                if (isAtBottom) {
+                    messageRecyclerView.smoothScrollToPosition(messageAdapter.itemCount - 1)
+                }
+            }
+        })
         messageRecyclerView.layoutManager = LinearLayoutManager(this)
         messageRecyclerView.adapter = messageAdapter
         send.setOnClickListener {
