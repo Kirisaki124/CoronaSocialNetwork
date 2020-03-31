@@ -51,14 +51,12 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(toolbar as Toolbar)
 
-        setupNotification()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-
+        setupNotification()
     }
 
     private fun setupNotification() {

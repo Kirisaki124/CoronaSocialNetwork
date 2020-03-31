@@ -12,6 +12,7 @@ object DaoNoti {
             child("senderId").setValue(DaoContext.authen.currentUser!!.uid)
             child("id").setValue(key)
             child("type").setValue(type)
+            child("seen").setValue(false)
             child("createdDate").setValue(Date().time)
             child("postId").setValue(postId)
         }
