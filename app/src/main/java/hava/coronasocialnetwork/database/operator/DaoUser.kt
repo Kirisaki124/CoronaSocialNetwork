@@ -6,6 +6,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import hava.coronasocialnetwork.database.context.DaoContext
+import hava.coronasocialnetwork.database.management.DaoPostManagement
 import hava.coronasocialnetwork.model.User
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -104,6 +105,31 @@ object DaoUser {
 
                 override fun onDataChange(p0: DataSnapshot) {
                     if (!p0.children.any { it.value?.equals(uid2)!! }) currentRef.setValue(uid2)
+                    DaoPostManagement.getUserPostsById(uid2)
+                        .addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onCancelled(p0: DatabaseError) {
+                            }
+
+                            override fun onDataChange(p0: DataSnapshot) {
+                                p0.children.forEach {
+                                    ref.child(uid1).child("posts").child(it.key!!)
+                                        .setValue(it.value)
+                                }
+                            }
+                        })
+                    DaoPostManagement.getUserPostsById(uid1)
+                        .addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onCancelled(p0: DatabaseError) {
+                            }
+
+                            override fun onDataChange(p0: DataSnapshot) {
+                                p0.children.forEach {
+                                    ref.child(uid2).child("posts").child(it.key!!)
+                                        .setValue(it.value)
+                                }
+                            }
+
+                        })
                 }
             })
         }
