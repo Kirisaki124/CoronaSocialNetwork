@@ -84,7 +84,7 @@ class CreatePostActivity : AppCompatActivity() {
                 val caption = etCaption.text.toString()
                 if (caption.trim() != "" || imagePath.toString().trim() != "") {
                     val uid = DaoAuthenManagement.getCurrentUser()?.uid!!
-                    val post = Post(caption, uid, Date().toString())
+                    val post = Post(caption, uid, Date().time)
                     GlobalScope.launch(Dispatchers.Main) {
                         DaoPostManagement.addPost(post, imagePath)
                     }
