@@ -33,7 +33,7 @@
         android:layout_toRightOf="@+id/avatarCardView"
         android:paddingBottom="4dp"
         android:text="Rose"
-        android:textColor="@color/colorAccent" />
+        android:textColor="@color/colorPrimaryDark" />
 
     <TextView
         android:id="@+id/message_body"
