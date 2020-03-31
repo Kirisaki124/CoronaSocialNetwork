@@ -132,7 +132,6 @@ class UserProfileActivity : AppCompatActivity() {
                     DaoUserManagement.addFriend(
                         DaoContext.authen.currentUser?.uid!!,
                         intent!!.getStringExtra("uid")
-
                     )
                     DaoNotiManagement.sendAddFriendNoti(uid)
                 }

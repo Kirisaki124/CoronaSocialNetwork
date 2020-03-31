@@ -34,6 +34,7 @@ object DaoUserManagement {
     suspend fun addFriend(uid1: String, uid2: String) {
         DaoUser.addFriend(uid1, uid2)
         DaoUser.addFriend(uid2, uid1)
+        DaoChatManagement.createRoomChat(uid1, uid2)
     }
 
     suspend fun getFriendList(uid: String): List<String> {

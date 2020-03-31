@@ -12,6 +12,9 @@ import hava.coronasocialnetwork.adapter.PostAdapter
 import hava.coronasocialnetwork.database.management.DaoPostManagement
 import hava.coronasocialnetwork.model.Post
 import kotlinx.android.synthetic.main.newfeed_layout.view.*
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
+
 
 class NewFeedFragment : Fragment() {
     private lateinit var postAdapter: PostAdapter
@@ -36,7 +39,10 @@ class NewFeedFragment : Fragment() {
         with(view) {
             val postQuery = DaoPostManagement.getNewFeed()
             val recyclerOptions = FirebaseRecyclerOptions.Builder<Post>().setQuery(postQuery) {
-                it.getValue(Post::class.java)!!
+                runBlocking {
+                    delay(1000)
+                    it.getValue(Post::class.java)!!
+                }
             }.build()
 
             postAdapter = PostAdapter(recyclerOptions)
