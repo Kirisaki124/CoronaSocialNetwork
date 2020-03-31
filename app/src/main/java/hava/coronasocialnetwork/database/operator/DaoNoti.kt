@@ -8,13 +8,15 @@ import java.util.*
 object DaoNoti {
     private val ref = DaoContext.ref.child("Users")
     fun sendPostNoti(type: String, postId: String, ownerId: String) {
-        ref.child(ownerId).child("Notification").child("NotiScreen").push().apply {
-            child("senderId").setValue(DaoContext.authen.currentUser!!.uid)
-            child("id").setValue(key)
-            child("type").setValue(type)
-            child("seen").setValue(false)
-            child("createdDate").setValue(Date().time)
-            child("postId").setValue(postId)
+        if (DaoContext.authen.currentUser!!.uid != ownerId) {
+            ref.child(ownerId).child("Notification").child("NotiScreen").push().apply {
+                child("senderId").setValue(DaoContext.authen.currentUser!!.uid)
+                child("id").setValue(key)
+                child("type").setValue(type)
+                child("seen").setValue(false)
+                child("createdDate").setValue(Date().time)
+                child("postId").setValue(postId)
+            }
         }
     }
 
