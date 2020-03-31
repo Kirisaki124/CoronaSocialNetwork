@@ -45,7 +45,11 @@ object DaoUserManagement {
     }
 
     suspend fun getAvatarById(uid: String): Uri {
-        return DaoUser.getAvatarById(uid)
+        return try {
+            DaoUser.getAvatarById(uid)
+        } catch (e: Exception) {
+            DaoUser.getAvatarById("defaultAvatar.jpg")
+        }
     }
 
     suspend fun isFriend(uid: String, friendId: String): Boolean {
