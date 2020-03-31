@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.android.material.button.MaterialButton
@@ -55,7 +56,9 @@ class PostAdapter(firebaseOptions: FirebaseRecyclerOptions<Post>) :
                         postImage.visibility = View.GONE
                     } else {
                         Glide.with(context.applicationContext)
-                            .load(DaoPostManagement.getPostImage(post.id)).into(postImage)
+                            .load(DaoPostManagement.getPostImage(post.id))
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .into(postImage)
                     }
 
                     dateText.text = DateUtils.getRelativeTimeSpanString(Date(post.createdDate).time)

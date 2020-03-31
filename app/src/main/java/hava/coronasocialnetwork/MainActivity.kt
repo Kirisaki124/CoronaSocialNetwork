@@ -9,7 +9,7 @@ import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.fragment.app.FragmentPagerAdapter
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -24,11 +24,9 @@ import hava.coronasocialnetwork.fragment.NotiFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        viewPager.adapter = object : FragmentStatePagerAdapter(
+    override fun onStart() {
+        super.onStart()
+        viewPager.adapter = object : FragmentPagerAdapter(
             supportFragmentManager,
             BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
         ) {
@@ -42,6 +40,7 @@ class MainActivity : AppCompatActivity() {
 
             override fun getCount() = 4
         }
+        viewPager.offscreenPageLimit = 4
         tabLayout.setupWithViewPager(viewPager)
         with(tabLayout) {
             getTabAt(0)?.setIcon(R.drawable.ic_home)
@@ -53,6 +52,13 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar as Toolbar)
 
         setupNotification()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+
     }
 
     private fun setupNotification() {
