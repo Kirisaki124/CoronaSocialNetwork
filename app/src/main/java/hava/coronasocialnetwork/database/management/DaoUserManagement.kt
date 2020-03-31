@@ -7,19 +7,6 @@ import hava.coronasocialnetwork.database.operator.UpdateStatus
 import hava.coronasocialnetwork.model.User
 
 object DaoUserManagement {
-    // TODO: Fix status
-//    fun changeName(uid: String, name: String): Boolean {
-//        return DaoUser.changeUsername(uid, name)
-//    }
-//
-//    fun changeAddress(uid: String, address: String): Boolean {
-//        return DaoUser.changeAddress(uid, address)
-//    }
-//
-//    fun changePhone(uid: String, phone: String): Boolean {
-//        return DaoUser.changePhone(uid, phone)
-//    }
-
     suspend fun getUserInfo(uid: String?): User? {
         return DaoUser.getUserInfo(uid)
     }
@@ -27,7 +14,8 @@ object DaoUserManagement {
     suspend fun searchUserByName(username: String): List<String> {
         val uidList = DaoUser.searchUserByName()
         return uidList.filter { uid ->
-            getUserInfo(uid)?.run { this.username.contains(username) } ?: false
+            getUserInfo(uid)?.run { this.username.toLowerCase().contains(username.toLowerCase()) && DaoContext.authen.currentUser!!.uid != uid }
+                ?: false
         }
     }
 
