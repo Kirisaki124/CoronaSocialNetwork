@@ -30,12 +30,12 @@ class ChatRoomAdapter(firebaseOptions: FirebaseRecyclerOptions<ChatRoom>) :
                     if (!room.seen) {
                         setBackgroundColor(resources.getColor(R.color.colorTextView))
                     }
-                    // TODO: Add seen to chatroom history
-                    var thierUid: String
+
+                    var theirUid: String
                     if (room.uid1 == DaoAuthenManagement.getCurrentUser()!!.uid) {
-                        thierUid = room.uid2
+                        theirUid = room.uid2
                     } else {
-                        thierUid = room.uid1
+                        theirUid = room.uid1
                     }
                     if (room.lastMessage != "null" && room.lastMessage != "") {
                         latestChat.text = room.lastMessage
@@ -50,15 +50,15 @@ class ChatRoomAdapter(firebaseOptions: FirebaseRecyclerOptions<ChatRoom>) :
                     }
 
 
-                    txtUsernameHistoryChat.text = DaoUserManagement.getUserInfo(thierUid)!!.username
-                    val avatar = DaoUserManagement.getAvatarById(thierUid)
+                    txtUsernameHistoryChat.text = DaoUserManagement.getUserInfo(theirUid)!!.username
+                    val avatar = DaoUserManagement.getAvatarById(theirUid)
                     if (avatar != Uri.EMPTY) {
                         Glide.with(this).load(avatar).into(historyChatAvatar)
                     }
                     setOnClickListener {
                         var intent = Intent(context, ChatActivity::class.java)
                         intent.putExtra("RoomID", room.chatRoomId)
-                        intent.putExtra("theirUid", thierUid)
+                        intent.putExtra("theirUid", theirUid)
                         DaoNotiManagement.markChatAsRead(
                             DaoAuthenManagement.getCurrentUser()!!.uid,
                             room.chatRoomId
