@@ -40,7 +40,6 @@ class MainActivity : AppCompatActivity() {
 
             override fun getCount() = 4
         }
-        viewPager.offscreenPageLimit = 4
         tabLayout.setupWithViewPager(viewPager)
         with(tabLayout) {
             getTabAt(0)?.setIcon(R.drawable.ic_home)
@@ -50,8 +49,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         setSupportActionBar(toolbar as Toolbar)
-
     }
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
