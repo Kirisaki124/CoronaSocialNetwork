@@ -6,6 +6,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.Query
 import com.google.firebase.database.ValueEventListener
 import hava.coronasocialnetwork.database.context.DaoContext
+import hava.coronasocialnetwork.database.management.DaoUserManagement
 import hava.coronasocialnetwork.model.Post
 import java.util.*
 import kotlin.coroutines.resume
@@ -17,7 +18,7 @@ object DaoPost {
         val key = DaoContext.ref.child("Users").child(currentUid).child("posts").push().key!!
         var addedImage = false
         val friendList = arrayListOf<String>()
-        friendList.addAll(DaoUser.getFriendList(currentUid))
+        friendList.addAll(DaoUserManagement.getFriendList(currentUid))
         friendList.add(currentUid)
 
         friendList.forEach { friend ->

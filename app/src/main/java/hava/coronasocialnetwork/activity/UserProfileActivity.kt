@@ -134,6 +134,7 @@ class UserProfileActivity : AppCompatActivity() {
                         intent!!.getStringExtra("uid")
                     )
                     DaoNotiManagement.sendAddFriendNoti(uid)
+                    item.isVisible = false
                 }
                 true
             }

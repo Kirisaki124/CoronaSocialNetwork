@@ -102,9 +102,11 @@ class CreatePostActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == 100) {
-            imgImage.setImageURI(data?.data)
-            imgImage.visibility = View.VISIBLE
-            imagePath = Uri.fromFile(File(getRealPathFromURI(data?.data!!)!!))
+            if (data != null) {
+                imgImage.setImageURI(data.data)
+                imgImage.visibility = View.VISIBLE
+                imagePath = Uri.fromFile(File(getRealPathFromURI(data.data!!)))
+            }
         }
         super.onActivityResult(requestCode, resultCode, data)
     }

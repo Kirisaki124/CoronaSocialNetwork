@@ -17,46 +17,6 @@ import kotlin.coroutines.suspendCoroutine
 
 object DaoUser {
     private val ref = DaoContext.ref.child("Users")
-    // TODO: Fix async
-//    fun changeUsername(uid: String, username: String): UpdateStatus {
-//        var isSuccess = false
-//        ref.child(uid).child("username").setValue(username)
-//            .addOnCompleteListener { task ->
-//                if (task.isSuccessful) {
-//                    isSuccess = true
-//                } else {
-//                    Log.i("Error", task.exception.toString())
-//                }
-//            }
-//        return isSuccess
-//    }
-//
-//    fun changeAddress(uid: String, address: String): Boolean {
-//        var isSuccess = false
-//        ref.child(uid).child("address").setValue(address)
-//            .addOnCompleteListener { task ->
-//                if (task.isSuccessful) {
-//                    isSuccess = true
-//                } else {
-//                    Log.i("Error", task.exception.toString())
-//                }
-//            }
-//        return isSuccess
-//    }
-//
-//    fun changePhone(uid: String, phone: String): Boolean {
-//        var isSuccess = false
-//        ref.child(uid).child("phone").setValue(phone)
-//            .addOnCompleteListener { task ->
-//                if (task.isSuccessful) {
-//                    isSuccess = true
-//                } else {
-//                    Log.i("Error", task.exception.toString())
-//                }
-//            }
-//        return isSuccess
-//    }
-
     suspend fun getUserInfo(uid: String?): User? {
         val ref = ref.child(uid!!)
         return suspendCoroutine { cont ->
