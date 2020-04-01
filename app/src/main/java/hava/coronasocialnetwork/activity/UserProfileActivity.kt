@@ -128,7 +128,7 @@ class UserProfileActivity : AppCompatActivity() {
                 true
             }
             R.id.addFriend -> {
-                GlobalScope.launch {
+                GlobalScope.launch(Dispatchers.Main) {
                     DaoUserManagement.addFriend(
                         DaoContext.authen.currentUser?.uid!!,
                         intent!!.getStringExtra("uid")

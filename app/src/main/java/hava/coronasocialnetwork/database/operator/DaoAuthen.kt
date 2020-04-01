@@ -37,6 +37,8 @@ object DaoAuthen {
             return RegisterStatus.WEAK_PASSWORD
         } catch (e: FirebaseAuthEmailException) {
             return RegisterStatus.WRONG_EMAIL_FORMAT
+        } catch (e: FirebaseAuthInvalidCredentialsException) {
+            return RegisterStatus.WRONG_EMAIL_FORMAT
         }
         return RegisterStatus.OK
     }

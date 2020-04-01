@@ -26,7 +26,7 @@ class SearchAdapter(val uids: List<String>) :
                     txtUsernameSearch.text = user.username
                     val avatar = DaoUserManagement.getAvatarById(uid)
                     if (avatar != Uri.EMPTY) {
-                        Glide.with(this).load(avatar).into(searchAvatar)
+                        Glide.with(context.applicationContext).load(avatar).into(searchAvatar)
                     }
                     setOnClickListener {
                         context.startActivity(
